@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package keeper.v1;
+
+//import "google/protobuf/empty.proto";
+import "buf/validate/validate.proto";
+
+option go_package = "github.com/Sadere/gophkeeper/pkg/keeper/v1";
+
+message AuthRequestV1 {
+  string Login = 1 [(buf.validate.field).string.min_len = 1, (buf.validate.field).string.max_len = 100];
+  string Password = 2 [(buf.validate.field).string.min_len = 1, (buf.validate.field).string.max_len = 20];
+}
+
+message AuthResponseV1 {
+  string AccessToken = 1;
+}
+
+service AuthServiceV1 {
+  rpc LoginV1(AuthRequestV1) returns (AuthResponseV1);
+  rpc RegisterV1(AuthRequestV1) returns (AuthResponseV1);
+}
