@@ -1,6 +1,8 @@
 package server
 
 import (
+	"fmt"
+
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"go.uber.org/zap"
 
@@ -30,7 +32,9 @@ func NewApp(cfg *config.Config, log *zap.SugaredLogger) *KeeperApp {
 
 func (a *KeeperApp) Start() error {
 	// Run migrations
-	database.MigrateUp(a.config.PostgresDSN)
+	if err := database.MigrateUp(a.config.PostgresDSN); err != nil {
+		return fmt.Errorf("failed to run migrations: %w", err)
+	}
 
 	// Init DB
 	db, err := database.NewConnection("pgx", a.config.PostgresDSN)
