@@ -8,12 +8,12 @@ import "buf/validate/validate.proto";
 option go_package = "github.com/Sadere/gophkeeper/pkg/keeper/v1";
 
 message AuthRequestV1 {
-  string Login = 1 [(buf.validate.field).string.min_len = 1, (buf.validate.field).string.max_len = 100];
-  string Password = 2 [(buf.validate.field).string.min_len = 1, (buf.validate.field).string.max_len = 20];
+  string login = 1 [(buf.validate.field).string.min_len = 1, (buf.validate.field).string.max_len = 100];
+  string password = 2 [(buf.validate.field).string.min_len = 1, (buf.validate.field).string.max_len = 20];
 }
 
 message AuthResponseV1 {
-  string AccessToken = 1;
+  string access_token = 1;
 }
 
 service AuthServiceV1 {
