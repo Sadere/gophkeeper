@@ -2,6 +2,8 @@ package repository
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 
 	"github.com/Sadere/gophkeeper/internal/server/model"
 	"github.com/jmoiron/sqlx"
@@ -48,6 +50,10 @@ func (r *PgUserRepository) GetUserByID(ctx context.Context, ID uint64) (*model.U
 
 	err := r.db.QueryRowxContext(ctx, "SELECT id, login, created_at, password FROM users WHERE id = $1", ID).StructScan(&user)
 
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, err
+	}
+
 	return &user, err
 }
 
@@ -56,6 +62,10 @@ func (r *PgUserRepository) GetUserByLogin(ctx context.Context, login string) (*m
 	var user model.User
 
 	err := r.db.QueryRowxContext(ctx, "SELECT id, login, created_at, password FROM users WHERE login = $1", login).StructScan(&user)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, err
+	}
 
 	return &user, err
 }
