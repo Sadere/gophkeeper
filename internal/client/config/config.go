@@ -12,7 +12,7 @@ type Config struct {
 }
 
 const (
-	DefaultServerAddress = "localhost:4080"
+	DefaultServerAddress = "localhost:8080"
 	DefaultTLS           = false
 )
 

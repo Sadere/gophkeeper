@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	DefaultAddress = "localhost:4080"
+	DefaultAddress = ":8080"
 	DefaultTLS     = false
 )
 
