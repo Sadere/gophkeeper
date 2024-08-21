@@ -12,7 +12,7 @@ import (
 )
 
 type KeeperServer struct {
-	pb.UnimplementedAuthServiceV1Server
+	pb.UnimplementedAuthServiceServer
 
 	config      *config.Config
 	userService service.IUserService
@@ -37,7 +37,7 @@ func (s *KeeperServer) Register() (*grpc.Server, error) {
 		srvInterceptors...,
 	))
 
-	pb.RegisterAuthServiceV1Server(srv, s)
+	pb.RegisterAuthServiceServer(srv, s)
 
 	return srv, nil
 }

@@ -14,7 +14,7 @@ import (
 
 type GRPCClient struct {
 	config      *config.Config
-	authClient  pb.AuthServiceV1Client
+	authClient  pb.AuthServiceClient
 	accessToken string
 }
 
@@ -30,7 +30,7 @@ func NewGRPCClient(cfg *config.Config) (*GRPCClient, error) {
 		return nil, fmt.Errorf("failed to create gRPC client: %w", err)
 	}
 
-	authClient := pb.NewAuthServiceV1Client(c)
+	authClient := pb.NewAuthServiceClient(c)
 
 	newClient.authClient = authClient
 
@@ -38,7 +38,7 @@ func NewGRPCClient(cfg *config.Config) (*GRPCClient, error) {
 }
 
 func (c *GRPCClient) Login(ctx context.Context, login string, password string) (string, error) {
-	req := &pb.AuthRequestV1{
+	req := &pb.LoginV1Request{
 		Login:    login,
 		Password: password,
 	}
@@ -54,7 +54,7 @@ func (c *GRPCClient) Login(ctx context.Context, login string, password string) (
 }
 
 func (c *GRPCClient) Register(ctx context.Context, login string, password string) (string, error) {
-	req := &pb.AuthRequestV1{
+	req := &pb.RegisterV1Request{
 		Login:    login,
 		Password: password,
 	}

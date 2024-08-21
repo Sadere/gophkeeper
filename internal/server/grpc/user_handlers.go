@@ -10,12 +10,13 @@ import (
 	"github.com/bufbuild/protovalidate-go"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/reflect/protoreflect"
 
 	pb "github.com/Sadere/gophkeeper/pkg/proto/keeper/v1"
 )
 
-func (s *KeeperServer) RegisterV1(ctx context.Context, in *pb.AuthRequestV1) (*pb.AuthResponseV1, error) {
-	var response pb.AuthResponseV1
+func (s *KeeperServer) RegisterV1(ctx context.Context, in *pb.RegisterV1Request) (*pb.RegisterV1Response, error) {
+	var response pb.RegisterV1Response
 
 	// Validate request
 	if err := validateAuthRequest(in); err != nil {
@@ -46,8 +47,8 @@ func (s *KeeperServer) RegisterV1(ctx context.Context, in *pb.AuthRequestV1) (*p
 	return &response, nil
 }
 
-func (s *KeeperServer) LoginV1(ctx context.Context, in *pb.AuthRequestV1) (*pb.AuthResponseV1, error) {
-	var response pb.AuthResponseV1
+func (s *KeeperServer) LoginV1(ctx context.Context, in *pb.LoginV1Request) (*pb.LoginV1Response, error) {
+	var response pb.LoginV1Response
 
 	// Validate request
 	if err := validateAuthRequest(in); err != nil {
@@ -78,7 +79,7 @@ func (s *KeeperServer) LoginV1(ctx context.Context, in *pb.AuthRequestV1) (*pb.A
 	return &response, nil
 }
 
-func validateAuthRequest(in *pb.AuthRequestV1) error {
+func validateAuthRequest(in protoreflect.ProtoMessage) error {
 	v, err := protovalidate.New()
 	if err != nil {
 		return status.Errorf(codes.Internal, "failed to init validator: %s", err)
