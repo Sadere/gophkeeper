@@ -1,0 +1,22 @@
+name: gophkeeper-api
+
+services:
+  gophkeeper-service:
+    image: gophkeeper:latest
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - 8080:8080
+    restart: on-failure:10
+    environment:
+      DATABASE_DSN: postgresql://${POSTGRES_APP_USER}:${POSTGRES_APP_PASS}@postgres:${POSTGRES_PORT}/${POSTGRES_APP_DB}
+      SECRET_KEY: ${APP_SECRET_KEY}
+    depends_on:
+      - postgres
+    networks:
+      - gophkeeper-network
+
+networks:
+  gophkeeper-network:
+    driver: bridge
