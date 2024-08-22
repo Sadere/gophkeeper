@@ -8,6 +8,10 @@ var (
 	NoStyle      = lipgloss.NewStyle()
 	FocusedStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
 	BlurredStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
+	HelpStyle    = lipgloss.NewStyle().Foreground(lipgloss.Color("241"))
+
+	NewSecretStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color("#388E3C"))
+	UpdatedSecretStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("#FFEB3B"))
 
 	BorderColor = lipgloss.Color("56")
 )

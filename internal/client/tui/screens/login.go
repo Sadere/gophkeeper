@@ -1,9 +1,8 @@
-package tui
+package screens
 
 import (
 	"context"
 	"strings"
-	"time"
 
 	"github.com/Sadere/gophkeeper/internal/client/tui/components"
 	"github.com/Sadere/gophkeeper/internal/client/tui/style"
@@ -92,10 +91,7 @@ func (m LoginModel) Submit() (tea.Model, tea.Cmd) {
 	}
 
 	// Login
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
-	defer cancel()
-
-	accessToken, err := m.state.client.Login(ctx, login, password)
+	accessToken, err := m.state.client.Login(context.Background(), login, password)
 	if err != nil {
 		m.errorMsg = err.Error()
 		return m, nil
@@ -104,7 +100,8 @@ func (m LoginModel) Submit() (tea.Model, tea.Cmd) {
 	// Proceed to main screen
 	m.state.accessToken = accessToken
 
-	return m, tea.Quit
+	mainScreen := NewSecretListModel(m.state)
+	return NewRootModel(m.state).SwitchScreen(mainScreen)
 }
 
 func (m LoginModel) View() string {

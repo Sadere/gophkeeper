@@ -2,7 +2,6 @@ package components
 
 import (
 	"fmt"
-	"log"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -47,7 +46,6 @@ func (m InputGroup) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else if m.FocusIndex < 0 {
 				m.FocusIndex = m.InputNum
 			}
-			log.Printf("%d\n", m.FocusIndex)
 
 			cmds := make([]tea.Cmd, m.InputNum)
 			for i := 0; i <= m.InputNum-1; i++ {

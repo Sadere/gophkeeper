@@ -3,11 +3,11 @@ package client
 import (
 	"github.com/Sadere/gophkeeper/internal/client/api/grpc"
 	"github.com/Sadere/gophkeeper/internal/client/config"
-	"github.com/Sadere/gophkeeper/internal/client/tui"
+	"github.com/Sadere/gophkeeper/internal/client/tui/screens"
 )
 
 type KeeperClient struct {
-	Root *tui.RootModel
+	Root *screens.RootModel
 }
 
 func NewKeeperClient(cfg *config.Config) (*KeeperClient, error) {
@@ -16,9 +16,9 @@ func NewKeeperClient(cfg *config.Config) (*KeeperClient, error) {
 		return nil, err
 	}
 
-	state := tui.NewState(gClient)
+	state := screens.NewState(gClient)
 
-	root := tui.NewRootModel(state)
+	root := screens.NewRootModel(state)
 
 	return &KeeperClient{
 		Root: root,

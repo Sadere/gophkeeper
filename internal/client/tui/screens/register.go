@@ -1,9 +1,8 @@
-package tui
+package screens
 
 import (
 	"context"
 	"strings"
-	"time"
 
 	"github.com/Sadere/gophkeeper/internal/client/tui/components"
 	"github.com/Sadere/gophkeeper/internal/client/tui/style"
@@ -113,10 +112,7 @@ func (m RegisterModel) Submit() (tea.Model, tea.Cmd) {
 	}
 
 	// Register
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
-	defer cancel()
-
-	accessToken, err := m.state.client.Register(ctx, login, password)
+	accessToken, err := m.state.client.Register(context.Background(), login, password)
 	if err != nil {
 		m.errorMsg = err.Error()
 		return m, nil

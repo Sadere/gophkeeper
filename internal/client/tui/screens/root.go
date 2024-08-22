@@ -1,14 +1,13 @@
-package tui
+package screens
 
 import (
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+
+	tea "github.com/charmbracelet/bubbletea"
 )
 
 type RootModel struct {
 	state         *State
-	windowHeight  int
-	windowWidth   int
 	currentWindow tea.Model
 }
 
@@ -38,8 +37,7 @@ func (m RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-		m.windowHeight = msg.Height
-		m.windowWidth = msg.Width
+		m.state.SetSize(msg.Width, msg.Height)
 
 		return m, nil
 	case tea.KeyMsg:
@@ -55,19 +53,36 @@ func (m RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m RootModel) View() string {
 	content := m.currentWindow.View()
 
-	middleBox := lipgloss.NewStyle().Width(m.windowWidth).Height(m.windowHeight - 1)
+	middleBox := lipgloss.NewStyle().Width(m.state.Width()).Height(m.state.Height() - 1)
 
 	body := middleBox.AlignHorizontal(lipgloss.Center).
 		AlignVertical(lipgloss.Center).
 		Render(content)
 
+	help := RenderHelpForModel(m.currentWindow)
+
 	return lipgloss.JoinVertical(
 		lipgloss.Left,
 		body,
+		help,
 	)
 }
 
 func (m RootModel) SwitchScreen(model tea.Model) (tea.Model, tea.Cmd) {
+	var (
+		cmd  tea.Cmd
+		cmds []tea.Cmd
+	)
+
 	m.currentWindow = model
-	return m.currentWindow, m.currentWindow.Init()
+
+	// Update child model window size
+	m.currentWindow, cmd = m.currentWindow.Update(tea.WindowSizeMsg{
+		Width:  m.state.Width(),
+		Height: m.state.Height(),
+	})
+
+	cmds = append(cmds, cmd, m.currentWindow.Init())
+
+	return m.currentWindow, tea.Batch(cmds...)
 }
