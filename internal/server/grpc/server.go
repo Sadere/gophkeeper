@@ -13,17 +13,21 @@ import (
 
 type KeeperServer struct {
 	pb.UnimplementedAuthServiceServer
+	pb.UnimplementedSecretsServiceServer
 
-	config      *config.Config
-	userService service.IUserService
-	log         *zap.SugaredLogger
+	config        *config.Config
+	userService   service.IUserService
+	secretService service.ISecretService
+	log           *zap.SugaredLogger
 }
 
-func NewKeeperServer(cfg *config.Config, userService service.IUserService, log *zap.SugaredLogger) *KeeperServer {
+func NewKeeperServer(cfg *config.Config, log *zap.SugaredLogger, userService service.IUserService, secretService service.ISecretService) *KeeperServer {
 	return &KeeperServer{
-		config:      cfg,
-		userService: userService,
-		log:         log,
+		config: cfg,
+		log:    log,
+
+		userService:   userService,
+		secretService: secretService,
 	}
 }
 
@@ -33,11 +37,15 @@ func (s *KeeperServer) Register() (*grpc.Server, error) {
 	// Log requests
 	srvInterceptors = append(srvInterceptors, interceptor.Logger(s.log))
 
+	// Authentication
+	srvInterceptors = append(srvInterceptors, interceptor.Authentication([]byte(s.config.SecretKey)))
+
 	srv := grpc.NewServer(grpc.ChainUnaryInterceptor(
 		srvInterceptors...,
 	))
 
 	pb.RegisterAuthServiceServer(srv, s)
+	pb.RegisterSecretsServiceServer(srv, s)
 
 	return srv, nil
 }

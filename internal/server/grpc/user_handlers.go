@@ -12,6 +12,7 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
+	"github.com/Sadere/gophkeeper/pkg/constants"
 	pb "github.com/Sadere/gophkeeper/pkg/proto/keeper/v1"
 )
 
@@ -99,4 +100,15 @@ func (s *KeeperServer) authUser(userID uint64) (string, error) {
 	}
 
 	return token, nil
+}
+
+func extractUserID(ctx context.Context) (uint64, error) {
+	uid := ctx.Value(constants.CtxUserIDKey)
+
+	userID, ok := uid.(uint64)
+	if !ok {
+		return 0, errors.New("failed to extract user id from context")
+	}
+
+	return userID, nil
 }

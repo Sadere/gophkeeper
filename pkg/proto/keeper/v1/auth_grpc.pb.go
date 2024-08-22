@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             (unknown)
-// source: proto/keeper/v1/keeper.proto
+// source: proto/keeper/v1/auth.proto
 
 package keeperv1
 
@@ -155,5 +155,5 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "proto/keeper/v1/keeper.proto",
+	Metadata: "proto/keeper/v1/auth.proto",
 }

@@ -7,6 +7,8 @@ import (
 
 var (
 	ErrBadCredentials = errors.New("bad credentials")
+
+	ErrNoSecrets = errors.New("no secrets were added yet")
 )
 
 type ErrUserExists struct {

@@ -52,8 +52,11 @@ func (a *KeeperApp) Start() error {
 	userRepo := repository.NewPgUserRepository(db)
 	userService := service.NewUserService(userRepo)
 
+	secretRepo := repository.NewPgSecretRepository(db)
+	secretService := service.NewSecretService(secretRepo)
+
 	// Create new gRPC server instance
-	server := grpc.NewKeeperServer(a.config, userService, a.log)
+	server := grpc.NewKeeperServer(a.config, a.log, userService, secretService)
 
 	srv, err := server.Register()
 	if err != nil {

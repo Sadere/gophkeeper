@@ -7,11 +7,11 @@ CREATE TYPE entry_type AS ENUM ('credential', 'text', 'blob', 'card');
 CREATE TABLE IF NOT EXISTS entries (
     id serial PRIMARY KEY,
     created_at timestamp NOT NULL DEFAULT NOW(),
-    updated_at timestamp NOT NULL,
+    updated_at timestamp NOT NULL DEFAULT NOW(),
     user_id integer,
     metadata varchar(255) NOT NULL,
     ent_type entry_type NOT NULL,
-    content bytea NOT NULL
+    payload bytea NOT NULL
 );
 -- +goose StatementEnd
 
