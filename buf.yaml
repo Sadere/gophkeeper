@@ -2,6 +2,8 @@ version: v1
 breaking:
   use:
     - FILE
+  except:
+    - FILE_NO_DELETE
 lint:
   use:
     - DEFAULT
