@@ -132,14 +132,9 @@ func (m *SecretListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "r":
-			previews, err := m.state.client.LoadPreviews(context.Background())
-			if err != nil {
-				m.errorMsg = fmt.Sprintf("failed to refresh secrets: %s", err.Error())
-				return m, nil
-			}
-
-			items := PreviewsToItems(previews)
-			return m, m.list.SetItems(items)
+			return m.Reload()
+		case "a":
+			return m.AddNew()
 		}
 	}
 
@@ -147,6 +142,22 @@ func (m *SecretListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	m.list, cmd = m.list.Update(msg)
 
 	return m, cmd
+}
+
+func (m *SecretListModel) Reload() (tea.Model, tea.Cmd) {
+	previews, err := m.state.client.LoadPreviews(context.Background())
+	if err != nil {
+		m.errorMsg = fmt.Sprintf("failed to refresh secrets: %s", err.Error())
+		return m, nil
+	}
+
+	items := PreviewsToItems(previews)
+	return m, m.list.SetItems(items)
+}
+
+func (m *SecretListModel) AddNew() (tea.Model, tea.Cmd) {
+	chooseTypeModel := NewChooseTypeModel(m.state)
+	return NewRootModel(m.state).SwitchScreen(chooseTypeModel)
 }
 
 func (m *SecretListModel) View() string {
