@@ -34,4 +34,4 @@ ps:
 
 .PHONY: imports
 imports:
-	goimports -w .
+	goimports -w $(find . -type f -name '*.go' -not -path "./pkg/proto/*")
