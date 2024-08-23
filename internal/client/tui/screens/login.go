@@ -13,6 +13,11 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+const (
+	loginLogin = iota
+	loginPassword
+)
+
 type LoginModel struct {
 	state      *State
 	inputGroup components.InputGroup
@@ -33,12 +38,12 @@ func NewLoginModel(state *State) *LoginModel {
 		t.CharLimit = 32
 
 		switch i {
-		case 0:
+		case loginLogin:
 			t.Placeholder = "Login"
 			t.Focus()
 			t.PromptStyle = style.FocusedStyle
 			t.TextStyle = style.FocusedStyle
-		case 1:
+		case loginPassword:
 			t.Placeholder = "Password"
 			t.EchoMode = textinput.EchoPassword
 			t.EchoCharacter = '•'
@@ -76,8 +81,8 @@ func (m LoginModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m LoginModel) Submit() (tea.Model, tea.Cmd) {
-	login := m.inputGroup.Inputs[0].Value()
-	password := m.inputGroup.Inputs[1].Value()
+	login := m.inputGroup.Inputs[loginLogin].Value()
+	password := m.inputGroup.Inputs[loginPassword].Value()
 
 	// Validate inputs
 	if len(login) == 0 {

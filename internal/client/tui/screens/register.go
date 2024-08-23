@@ -19,6 +19,12 @@ var (
 	errPasswordConfirmEmpty = "Please enter password second time"
 )
 
+const (
+	registerLogin = iota
+	registerPassword
+	registerConfirmPassword
+)
+
 type RegisterModel struct {
 	state      *State
 	inputGroup components.InputGroup
@@ -39,16 +45,16 @@ func NewRegisterModel(state *State) *RegisterModel {
 		t.CharLimit = 32
 
 		switch i {
-		case 0:
+		case registerLogin:
 			t.Placeholder = "Login"
 			t.Focus()
 			t.PromptStyle = style.FocusedStyle
 			t.TextStyle = style.FocusedStyle
-		case 1:
+		case registerPassword:
 			t.Placeholder = "Password"
 			t.EchoMode = textinput.EchoPassword
 			t.EchoCharacter = '•'
-		case 2:
+		case registerConfirmPassword:
 			t.Placeholder = "Confirm password"
 			t.EchoMode = textinput.EchoPassword
 			t.EchoCharacter = '•'
@@ -86,9 +92,9 @@ func (m RegisterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m RegisterModel) Submit() (tea.Model, tea.Cmd) {
-	login := m.inputGroup.Inputs[0].Value()
-	password := m.inputGroup.Inputs[1].Value()
-	confirmPassword := m.inputGroup.Inputs[2].Value()
+	login := m.inputGroup.Inputs[registerLogin].Value()
+	password := m.inputGroup.Inputs[registerPassword].Value()
+	confirmPassword := m.inputGroup.Inputs[registerConfirmPassword].Value()
 
 	// Validate inputs
 	if len(login) == 0 {
@@ -121,7 +127,8 @@ func (m RegisterModel) Submit() (tea.Model, tea.Cmd) {
 	// Proceed to main screen
 	m.state.accessToken = accessToken
 
-	return m, tea.Quit
+	mainScreen := NewSecretListModel(m.state)
+	return NewRootModel(m.state).SwitchScreen(mainScreen)
 }
 
 func (m RegisterModel) View() string {
