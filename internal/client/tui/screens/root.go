@@ -53,7 +53,9 @@ func (m RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m RootModel) View() string {
 	content := m.currentWindow.View()
 
-	middleBox := lipgloss.NewStyle().Width(m.state.Width()).Height(m.state.Height() - 1)
+	middleBox := lipgloss.NewStyle().
+		Width(m.state.Width()).
+		Height(m.state.Height() - 1)
 
 	body := middleBox.AlignHorizontal(lipgloss.Center).
 		AlignVertical(lipgloss.Center).
@@ -69,10 +71,7 @@ func (m RootModel) View() string {
 }
 
 func (m RootModel) SwitchScreen(model tea.Model) (tea.Model, tea.Cmd) {
-	var (
-		cmd  tea.Cmd
-		cmds []tea.Cmd
-	)
+	var cmd tea.Cmd
 
 	m.currentWindow = model
 
@@ -82,7 +81,10 @@ func (m RootModel) SwitchScreen(model tea.Model) (tea.Model, tea.Cmd) {
 		Height: m.state.Height(),
 	})
 
-	cmds = append(cmds, cmd, m.currentWindow.Init())
-
-	return m.currentWindow, tea.Batch(cmds...)
+	return m.currentWindow, tea.Batch(
+		// Clear screen fixes issue when changing screens results in leftover view from previous model
+		tea.ClearScreen,
+		cmd,
+		m.currentWindow.Init(),
+	)
 }
