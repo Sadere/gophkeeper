@@ -1,22 +1,31 @@
 package screens
 
 import (
-	"fmt"
 	"strings"
 
+	"github.com/Sadere/gophkeeper/internal/client/tui/components"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+const (
+	selectLogin = iota
+	selectRegister
+)
+
 type WelcomeModel struct {
-	state   *State
-	choices []string
-	cursor  int
+	state       *State
+	selectModel components.SelectModel
 }
 
 func NewWelcomeModel(state *State) *WelcomeModel {
+	choices := []string{
+		selectLogin:    "Login",
+		selectRegister: "Register new user",
+	}
+
 	return &WelcomeModel{
-		state:   state,
-		choices: []string{"Login", "Register new user"},
+		state:       state,
+		selectModel: components.NewSelectModel(choices),
 	}
 }
 
@@ -28,28 +37,24 @@ func (m *WelcomeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "up":
-			if m.cursor > 0 {
-				m.cursor--
-			}
-
-		case "down":
-			if m.cursor < len(m.choices)-1 {
-				m.cursor++
-			}
 		case "enter":
-			switch m.cursor {
-			case 0:
+			switch m.selectModel.Selected() {
+			case selectLogin:
 				loginModel := NewLoginModel(m.state)
 				return NewRootModel(m.state).SwitchScreen(loginModel)
-			case 1:
+			case selectRegister:
 				registerModel := NewRegisterModel(m.state)
 				return NewRootModel(m.state).SwitchScreen(registerModel)
 			}
 		}
 	}
 
-	return m, nil
+	// Update select
+	mm, cmd := m.selectModel.Update(msg)
+
+	m.selectModel = mm.(components.SelectModel)
+
+	return m, cmd
 }
 
 func (m *WelcomeModel) View() string {
@@ -57,15 +62,8 @@ func (m *WelcomeModel) View() string {
 
 	b.WriteString("What would you like to do?\n\n")
 
-	for i, choice := range m.choices {
-		cursor := " "
-		if m.cursor == i {
-			cursor = ">"
-		}
-
-		// Render the row
-		fmt.Fprintf(&b, "%s %s\n", cursor, choice)
-	}
+	// Render select
+	b.WriteString(m.selectModel.View())
 
 	return b.String()
 }
