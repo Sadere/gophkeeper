@@ -51,6 +51,47 @@ func SecretToProto(secret *model.Secret) *pb.Secret {
 	return pbSecret
 }
 
+func ProtoToSecret(pbSecret *pb.Secret) *model.Secret {
+	secret := &model.Secret{
+		ID:        pbSecret.Id,
+		CreatedAt: pbSecret.CreatedAt.AsTime(),
+		UpdatedAt: pbSecret.UpdatedAt.AsTime(),
+		Metadata:  pbSecret.Metadata,
+		SType:     string(model.UnknownSecret),
+	}
+
+	secret.SType = string(ProtoToType(pbSecret.Type))
+
+	switch secret.SType {
+	case string(model.CredSecret):
+		pbCred := pbSecret.Content.(*pb.Secret_Credential)
+		secret.Creds = &model.Credentials{
+			Login: pbCred.Credential.GetLogin(),
+			Password: pbCred.Credential.GetPassword(),
+		}
+	case string(model.TextSecret):
+		pbText := pbSecret.Content.(*pb.Secret_Text)
+		secret.Text = &model.Text{
+			Content: pbText.Text.GetText(),
+		}
+	case string(model.BlobSecret):
+		pbBlob := pbSecret.Content.(*pb.Secret_Blob)
+		secret.Blob = &model.Blob{
+			FileName: pbBlob.Blob.GetFileName(),
+		}
+	case string(model.CardSecret):
+		pbCard := pbSecret.Content.(*pb.Secret_Card)
+		secret.Card = &model.Card{
+			Number: pbCard.Card.GetNumber(),
+			ExpYear: pbCard.Card.GetExpYear(),
+			ExpMonth: pbCard.Card.GetExpMonth(),
+			Cvv: pbCard.Card.GetCvv(),
+		}
+	}
+
+	return secret
+}
+
 func ProtoToPreview(pbPreview *pb.SecretPreview) *model.SecretPreview {
 	return &model.SecretPreview{
 		ID:        pbPreview.Id,

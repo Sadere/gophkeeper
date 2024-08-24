@@ -46,3 +46,25 @@ func (s *KeeperServer) SecretPreviewsV1(ctx context.Context, in *emptypb.Empty) 
 
 	return &response, nil
 }
+
+func (s *KeeperServer) SaveUserSecretV1(ctx context.Context, in *pb.SaveUserSecretV1Request) (*emptypb.Empty, error) {
+	userID, err := extractUserID(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	secret := convert.ProtoToSecret(in.Secret)
+	secret.UserID = userID
+
+	errAdd := s.secretService.AddSecret(ctx, in.MasterPassword, secret)
+
+	if errors.Is(errAdd, model.ErrWrongSecretType) {
+		return nil, status.Error(codes.InvalidArgument, errAdd.Error())
+	}
+
+	if errAdd != nil {
+		return nil, status.Error(codes.Internal, errAdd.Error())
+	}
+
+	return &emptypb.Empty{}, nil
+}
