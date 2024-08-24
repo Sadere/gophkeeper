@@ -10,6 +10,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/Sadere/gophkeeper/pkg/constants"
 	"github.com/Sadere/gophkeeper/pkg/convert"
@@ -105,4 +106,28 @@ func (c *GRPCClient) LoadPreviews(ctx context.Context) (model.SecretPreviews, er
 	}
 
 	return previews, nil
+}
+
+func (c *GRPCClient) SaveCredential(ctx context.Context, metadata, login, password string) error {
+	// form gRPC request
+	request := &pb.SaveUserSecretV1Request{
+		MasterPassword: password,
+		Secret: &pb.Secret{
+			CreatedAt: timestamppb.Now(),
+			UpdatedAt: timestamppb.Now(),
+			Metadata:  metadata,
+			Type:      pb.SecretType_SECRET_TYPE_CREDENTIAL,
+			Content: &pb.Secret_Credential{
+				Credential: &pb.Credential{
+					Login:    login,
+					Password: password,
+				},
+			},
+		},
+	}
+
+	// performing gRPC call
+	_, err := c.secretsClient.SaveUserSecretV1(context.Background(), request)
+
+	return err
 }
