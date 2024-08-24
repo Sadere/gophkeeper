@@ -49,6 +49,10 @@ func (m *ChooseTypeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// Back to secret list
 				mainScreen := NewSecretListModel(m.state)
 				return NewRootModel(m.state).SwitchScreen(mainScreen)
+			case selectCredential:
+				// Add credential screen
+				credScreen := NewCredentialModel(m.state)
+				return NewRootModel(m.state).SwitchScreen(credScreen)
 			}
 		}
 	}
