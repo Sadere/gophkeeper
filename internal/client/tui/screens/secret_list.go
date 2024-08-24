@@ -19,16 +19,20 @@ type item struct {
 }
 
 func (i item) Title() string {
-
 	return fmt.Sprintf(
-		"%s %s Created: %v Updated: %v",
+		"%s %s %s",
 		i.Status(),
 		i.Icon(),
+		i.Preview.Metadata,
+	)
+}
+func (i item) Description() string {
+	return fmt.Sprintf(
+		"Created: %v Updated: %v",
 		i.Preview.CreatedAt.Format(constants.TimeFormat),
 		i.Preview.UpdatedAt.Format(constants.TimeFormat),
 	)
 }
-func (i item) Description() string { return i.Preview.Metadata }
 func (i item) FilterValue() string { return i.Preview.Metadata }
 
 func (i item) Icon() string {
@@ -72,8 +76,8 @@ type MyDelegate struct {
 }
 
 func (d MyDelegate) Render(w io.Writer, m list.Model, index int, item list.Item) {
-	d.DefaultDelegate.Styles.DimmedDesc = style.BlurredStyle
-	d.DefaultDelegate.Styles.DimmedTitle = style.BlurredStyle
+	d.DefaultDelegate.Styles.NormalDesc = style.BlurredStyle
+	d.DefaultDelegate.Styles.NormalTitle = style.BlurredStyle
 
 	d.DefaultDelegate.Styles.SelectedDesc = style.FocusedStyle
 	d.DefaultDelegate.Styles.SelectedTitle = style.FocusedStyle
