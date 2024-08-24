@@ -46,10 +46,10 @@ type Blob struct {
 }
 
 type Card struct {
-	Number    string `json:"number"`
-	ExpYear   uint32 `json:"exp_year"`
-	ExpMonth  uint32 `json:"exp_month"`
-	Cvv       uint32 `json:"cvv"`
+	Number   string `json:"number"`
+	ExpYear  uint32 `json:"exp_year"`
+	ExpMonth uint32 `json:"exp_month"`
+	Cvv      uint32 `json:"cvv"`
 }
 
 // Indicates status of secret for particular client: new, updated or read

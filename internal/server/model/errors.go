@@ -8,7 +8,7 @@ import (
 var (
 	ErrBadCredentials = errors.New("bad credentials")
 
-	ErrNoSecrets = errors.New("no secrets were added yet")
+	ErrNoSecrets       = errors.New("no secrets were added yet")
 	ErrWrongSecretType = errors.New("invalid secret type")
 )
 

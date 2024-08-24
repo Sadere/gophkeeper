@@ -66,7 +66,7 @@ func ProtoToSecret(pbSecret *pb.Secret) *model.Secret {
 	case string(model.CredSecret):
 		pbCred := pbSecret.Content.(*pb.Secret_Credential)
 		secret.Creds = &model.Credentials{
-			Login: pbCred.Credential.GetLogin(),
+			Login:    pbCred.Credential.GetLogin(),
 			Password: pbCred.Credential.GetPassword(),
 		}
 	case string(model.TextSecret):
@@ -82,10 +82,10 @@ func ProtoToSecret(pbSecret *pb.Secret) *model.Secret {
 	case string(model.CardSecret):
 		pbCard := pbSecret.Content.(*pb.Secret_Card)
 		secret.Card = &model.Card{
-			Number: pbCard.Card.GetNumber(),
-			ExpYear: pbCard.Card.GetExpYear(),
+			Number:   pbCard.Card.GetNumber(),
+			ExpYear:  pbCard.Card.GetExpYear(),
 			ExpMonth: pbCard.Card.GetExpMonth(),
-			Cvv: pbCard.Card.GetCvv(),
+			Cvv:      pbCard.Card.GetCvv(),
 		}
 	}
 
