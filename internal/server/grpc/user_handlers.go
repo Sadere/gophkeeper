@@ -20,7 +20,7 @@ func (s *KeeperServer) RegisterV1(ctx context.Context, in *pb.RegisterV1Request)
 	var response pb.RegisterV1Response
 
 	// Validate request
-	if err := validateAuthRequest(in); err != nil {
+	if err := validateRequest(in); err != nil {
 		return nil, err
 	}
 
@@ -52,7 +52,7 @@ func (s *KeeperServer) LoginV1(ctx context.Context, in *pb.LoginV1Request) (*pb.
 	var response pb.LoginV1Response
 
 	// Validate request
-	if err := validateAuthRequest(in); err != nil {
+	if err := validateRequest(in); err != nil {
 		return nil, err
 	}
 
@@ -80,14 +80,14 @@ func (s *KeeperServer) LoginV1(ctx context.Context, in *pb.LoginV1Request) (*pb.
 	return &response, nil
 }
 
-func validateAuthRequest(in protoreflect.ProtoMessage) error {
+func validateRequest(in protoreflect.ProtoMessage) error {
 	v, err := protovalidate.New()
 	if err != nil {
 		return status.Errorf(codes.Internal, "failed to init validator: %s", err)
 	}
 
 	if err = v.Validate(in); err != nil {
-		return status.Errorf(codes.InvalidArgument, "failed to validate metrics: %s", err)
+		return status.Errorf(codes.InvalidArgument, "failed to validate request: %s", err)
 	}
 
 	return nil

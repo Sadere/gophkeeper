@@ -53,6 +53,11 @@ func (s *KeeperServer) SaveUserSecretV1(ctx context.Context, in *pb.SaveUserSecr
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
+	// Validate request
+	if err := validateRequest(in.Secret); err != nil {
+		return nil, err
+	}
+
 	secret := convert.ProtoToSecret(in.Secret)
 	secret.UserID = userID
 
