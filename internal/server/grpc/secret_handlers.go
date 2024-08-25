@@ -47,6 +47,7 @@ func (s *KeeperServer) SecretPreviewsV1(ctx context.Context, in *emptypb.Empty) 
 	return &response, nil
 }
 
+// Saves new secret or updates existing one
 func (s *KeeperServer) SaveUserSecretV1(ctx context.Context, in *pb.SaveUserSecretV1Request) (*emptypb.Empty, error) {
 	userID, err := extractUserID(ctx)
 	if err != nil {
@@ -54,22 +55,52 @@ func (s *KeeperServer) SaveUserSecretV1(ctx context.Context, in *pb.SaveUserSecr
 	}
 
 	// Validate request
-	if err := validateRequest(in.Secret); err != nil {
+	if err := validateRequest(in); err != nil {
 		return nil, err
 	}
 
 	secret := convert.ProtoToSecret(in.Secret)
 	secret.UserID = userID
 
-	errAdd := s.secretService.AddSecret(ctx, in.MasterPassword, secret)
+	// Save secret
+	errSave := s.secretService.SaveSecret(ctx, in.MasterPassword, secret)
 
-	if errors.Is(errAdd, model.ErrWrongSecretType) {
-		return nil, status.Error(codes.InvalidArgument, errAdd.Error())
+	if errors.Is(errSave, model.ErrWrongSecretType) {
+		return nil, status.Error(codes.InvalidArgument, errSave.Error())
 	}
 
-	if errAdd != nil {
-		return nil, status.Error(codes.Internal, errAdd.Error())
+	if errSave != nil {
+		return nil, status.Error(codes.Internal, errSave.Error())
 	}
 
 	return &emptypb.Empty{}, nil
+}
+
+func (s *KeeperServer) GetUserSecretV1(ctx context.Context, in *pb.GetUserSecretV1Request) (*pb.GetUserSecretV1Response, error) {
+	var response pb.GetUserSecretV1Response
+
+	userID, err := extractUserID(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	// Validate request
+	if err := validateRequest(in); err != nil {
+		return nil, err
+	}
+
+	// Acquire secret
+	secret, err := s.secretService.GetSecret(ctx, in.MasterPassword, in.Id, userID)
+	if errors.Is(err, model.ErrSecretNotFound) {
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+
+	// Other errors
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	response.Secret = convert.SecretToProto(secret)
+
+	return &response, nil
 }

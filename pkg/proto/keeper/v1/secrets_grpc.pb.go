@@ -8,6 +8,7 @@ package keeperv1
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -22,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	SecretsService_SecretPreviewsV1_FullMethodName = "/proto.keeper.v1.SecretsService/SecretPreviewsV1"
 	SecretsService_SaveUserSecretV1_FullMethodName = "/proto.keeper.v1.SecretsService/SaveUserSecretV1"
+	SecretsService_GetUserSecretV1_FullMethodName  = "/proto.keeper.v1.SecretsService/GetUserSecretV1"
 )
 
 // SecretsServiceClient is the client API for SecretsService service.
@@ -30,6 +32,7 @@ const (
 type SecretsServiceClient interface {
 	SecretPreviewsV1(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*SecretPreviewsV1Response, error)
 	SaveUserSecretV1(ctx context.Context, in *SaveUserSecretV1Request, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetUserSecretV1(ctx context.Context, in *GetUserSecretV1Request, opts ...grpc.CallOption) (*GetUserSecretV1Response, error)
 }
 
 type secretsServiceClient struct {
@@ -60,12 +63,23 @@ func (c *secretsServiceClient) SaveUserSecretV1(ctx context.Context, in *SaveUse
 	return out, nil
 }
 
+func (c *secretsServiceClient) GetUserSecretV1(ctx context.Context, in *GetUserSecretV1Request, opts ...grpc.CallOption) (*GetUserSecretV1Response, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserSecretV1Response)
+	err := c.cc.Invoke(ctx, SecretsService_GetUserSecretV1_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SecretsServiceServer is the server API for SecretsService service.
 // All implementations must embed UnimplementedSecretsServiceServer
 // for forward compatibility.
 type SecretsServiceServer interface {
 	SecretPreviewsV1(context.Context, *emptypb.Empty) (*SecretPreviewsV1Response, error)
 	SaveUserSecretV1(context.Context, *SaveUserSecretV1Request) (*emptypb.Empty, error)
+	GetUserSecretV1(context.Context, *GetUserSecretV1Request) (*GetUserSecretV1Response, error)
 	mustEmbedUnimplementedSecretsServiceServer()
 }
 
@@ -81,6 +95,9 @@ func (UnimplementedSecretsServiceServer) SecretPreviewsV1(context.Context, *empt
 }
 func (UnimplementedSecretsServiceServer) SaveUserSecretV1(context.Context, *SaveUserSecretV1Request) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SaveUserSecretV1 not implemented")
+}
+func (UnimplementedSecretsServiceServer) GetUserSecretV1(context.Context, *GetUserSecretV1Request) (*GetUserSecretV1Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserSecretV1 not implemented")
 }
 func (UnimplementedSecretsServiceServer) mustEmbedUnimplementedSecretsServiceServer() {}
 func (UnimplementedSecretsServiceServer) testEmbeddedByValue()                        {}
@@ -139,6 +156,24 @@ func _SecretsService_SaveUserSecretV1_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SecretsService_GetUserSecretV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserSecretV1Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SecretsServiceServer).GetUserSecretV1(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SecretsService_GetUserSecretV1_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SecretsServiceServer).GetUserSecretV1(ctx, req.(*GetUserSecretV1Request))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SecretsService_ServiceDesc is the grpc.ServiceDesc for SecretsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -153,6 +188,10 @@ var SecretsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SaveUserSecretV1",
 			Handler:    _SecretsService_SaveUserSecretV1_Handler,
+		},
+		{
+			MethodName: "GetUserSecretV1",
+			Handler:    _SecretsService_GetUserSecretV1_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -2,7 +2,9 @@ package service
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"slices"
 
@@ -15,7 +17,8 @@ import (
 
 type ISecretService interface {
 	GetUserSecrets(ctx context.Context, userID uint64) (pkgModel.Secrets, error)
-	AddSecret(ctx context.Context, password string, secret *pkgModel.Secret) error
+	SaveSecret(ctx context.Context, password string, secret *pkgModel.Secret) error
+	GetSecret(ctx context.Context, password string, ID uint64, userID uint64) (*pkgModel.Secret, error)
 }
 
 type SecretService struct {
@@ -42,7 +45,7 @@ func (s *SecretService) GetUserSecrets(ctx context.Context, userID uint64) (pkgM
 	return secrets, nil
 }
 
-func (s *SecretService) AddSecret(ctx context.Context, password string, secret *pkgModel.Secret) error {
+func (s *SecretService) SaveSecret(ctx context.Context, password string, secret *pkgModel.Secret) error {
 	var (
 		err                error
 		payload, encrypted []byte
@@ -62,7 +65,7 @@ func (s *SecretService) AddSecret(ctx context.Context, password string, secret *
 		return fmt.Errorf("failed to save secret data: %w", err)
 	}
 
-	// encrypt secret data
+	// Encrypt secret data
 	encrypted, err = crypto.Encrypt(password, payload)
 	if err != nil {
 		return fmt.Errorf("failed to encrypt data: %w", err)
@@ -70,13 +73,53 @@ func (s *SecretService) AddSecret(ctx context.Context, password string, secret *
 
 	secret.Payload = encrypted
 
-	// store secret
-	_, err = s.secretRepo.Create(ctx, secret)
+	// Store or update secret
+	if secret.ID > 0 {
+		// Check authority over existing secret
+		_, err = s.secretRepo.GetSecret(ctx, secret.ID, secret.UserID)
+		if err != nil {
+			// Secret not found for this user
+			return model.ErrSecretNotFound
+		}
+
+		err = s.secretRepo.Update(ctx, secret)
+	} else {
+		_, err = s.secretRepo.Create(ctx, secret)
+	}
+
 	if err != nil {
 		return fmt.Errorf("failed to store secret: %w", err)
 	}
 
 	return nil
+}
+
+func (s *SecretService) GetSecret(ctx context.Context, password string, ID uint64, userID uint64) (*pkgModel.Secret, error) {
+	secret, err := s.secretRepo.GetSecret(ctx, ID, userID)
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, model.ErrSecretNotFound
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Decrypt secret
+	decrypted, err := crypto.Decrypt(password, secret.Payload)
+	if err != nil {
+		return nil, fmt.Errorf("failed to decrypt secret: %w", err)
+	}
+
+	// Unmarshal corresponding struct
+	switch secret.SType {
+	case string(pkgModel.CredSecret):
+		secret.Creds = &pkgModel.Credentials{}
+		if err := json.Unmarshal(decrypted, secret.Creds); err != nil {
+			return nil, fmt.Errorf("failed to extract credentials: %w", err)
+		}
+	}
+
+	return secret, nil
 }
 
 func validateType(sType string) bool {

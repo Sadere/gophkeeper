@@ -2,8 +2,6 @@ package repository
 
 import (
 	"context"
-	"database/sql"
-	"errors"
 
 	"github.com/Sadere/gophkeeper/pkg/model"
 	"github.com/jmoiron/sqlx"
@@ -75,6 +73,7 @@ func (r *PgSecretRepository) Update(ctx context.Context, secret *model.Secret) e
 		secret.Metadata,
 		secret.SType,
 		secret.Payload,
+		secret.ID,
 	)
 
 	return err
@@ -86,10 +85,10 @@ func (r *PgSecretRepository) GetSecret(ctx context.Context, secretID uint64, use
 	err := r.db.QueryRowxContext(ctx,
 		`SELECT
 			id, created_at, updated_at, metadata, ent_type, payload
-		FROM users
+		FROM entries
 		WHERE id = $1 AND user_id = $2`, secretID, userID).StructScan(&secret)
 
-	if errors.Is(err, sql.ErrNoRows) {
+	if err != nil {
 		return nil, err
 	}
 

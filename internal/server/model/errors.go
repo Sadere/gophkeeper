@@ -10,6 +10,7 @@ var (
 
 	ErrNoSecrets       = errors.New("no secrets were added yet")
 	ErrWrongSecretType = errors.New("invalid secret type")
+	ErrSecretNotFound  = errors.New("secret not found")
 )
 
 type ErrUserExists struct {
