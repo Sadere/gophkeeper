@@ -18,6 +18,7 @@ var (
 
 func RenderBox(body string) string {
 	borderBox := NoStyle.
+		Padding(0, 1).
 		BorderStyle(lipgloss.RoundedBorder()).
 		BorderForeground(BorderColor)
 
