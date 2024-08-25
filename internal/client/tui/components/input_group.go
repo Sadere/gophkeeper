@@ -19,9 +19,11 @@ type InputGroup struct {
 func NewInputGroup(inputs []textinput.Model) InputGroup {
 	// Set styles
 	for i, input := range inputs {
-		input.Cursor.Style = style.FocusedStyle
-		input.PromptStyle = style.FocusedStyle
-		input.TextStyle = style.FocusedStyle
+		if i == 0 {
+			input.PromptStyle = style.FocusedStyle
+			input.Cursor.Style = style.FocusedStyle
+			input.TextStyle = style.FocusedStyle
+		}
 
 		inputs[i] = input
 	}
