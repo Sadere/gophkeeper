@@ -79,6 +79,9 @@ func (m CredentialModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
+		case "esc":
+			mainScreen := NewSecretListModel(m.state)
+			return NewRootModel(m.state).SwitchScreen(mainScreen)
 		case "enter":
 			if m.inputGroup.FocusIndex == m.inputGroup.InputNum {
 				return m.Submit()

@@ -53,6 +53,10 @@ func (m *ChooseTypeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// Add credential screen
 				credScreen := NewCredentialModel(m.state, 0)
 				return NewRootModel(m.state).SwitchScreen(credScreen)
+			case selectText:
+				// Add text screen
+				textScreen := NewTextModel(m.state, 0)
+				return NewRootModel(m.state).SwitchScreen(textScreen)
 			}
 		}
 	}

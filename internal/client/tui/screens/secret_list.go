@@ -179,6 +179,9 @@ func (m *SecretListModel) Edit(preview *model.SecretPreview) (tea.Model, tea.Cmd
 	case string(model.CredSecret):
 		credModel := NewCredentialModel(m.state, preview.ID)
 		return NewRootModel(m.state).SwitchScreen(credModel)
+	case string(model.TextSecret):
+		textModel := NewTextModel(m.state, preview.ID)
+		return NewRootModel(m.state).SwitchScreen(textModel)
 	}
 
 	return m, nil

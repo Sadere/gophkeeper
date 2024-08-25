@@ -11,6 +11,8 @@ type IApiClient interface {
 	Login(ctx context.Context, login string, password string) (string, error)
 
 	LoadPreviews(ctx context.Context) (model.SecretPreviews, error)
-	SaveCredential(ctx context.Context, ID uint64, metadata, login, password string) error
 	LoadSecret(ctx context.Context, ID uint64) (*model.Secret, error)
+	
+	SaveCredential(ctx context.Context, ID uint64, metadata, login, password string) error
+	SaveText(ctx context.Context, ID uint64, metadata, text string) error
 }
