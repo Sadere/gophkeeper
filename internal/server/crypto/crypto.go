@@ -15,7 +15,10 @@ import (
 
 // Encrypts plaintext data using AES-GCM with a key derived from master password
 func Encrypt(password string, plaintext []byte) ([]byte, error) {
-	key, salt := deriveKey(password, nil)
+	key, salt, err := deriveKey(password, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to derive key: %w", err)
+	}
 
 	// creating AES block
 	AESBlock, err := aes.NewCipher(key)
@@ -52,7 +55,10 @@ func Decrypt(password string, encrypted []byte) ([]byte, error) {
 
 	encrypted = encrypted[:saltIdx]
 
-	key, _ := deriveKey(password, salt)
+	key, _, err := deriveKey(password, salt)
+	if err != nil {
+		return nil, fmt.Errorf("failed to derive key: %w", err)
+	}
 
 	// creating AES block
 	AESBlock, err := aes.NewCipher(key)
@@ -79,10 +85,13 @@ func Decrypt(password string, encrypted []byte) ([]byte, error) {
 	return decrypted, nil
 }
 
-func deriveKey(password string, salt []byte) ([]byte, []byte) {
+func deriveKey(password string, salt []byte) ([]byte, []byte, error) {
 	if len(salt) == 0 {
 		salt = make([]byte, constants.SaltLen)
-		rand.Read(salt)
+		_, err := rand.Read(salt)
+		if err != nil {
+			return nil, nil, err
+		}
 	}
-	return pbkdf2.Key([]byte(password), salt, 4096, 32, sha256.New), salt
+	return pbkdf2.Key([]byte(password), salt, 4096, 32, sha256.New), salt, nil
 }
