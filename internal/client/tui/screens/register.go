@@ -41,15 +41,12 @@ func NewRegisterModel(state *State) *RegisterModel {
 	var t textinput.Model
 	for i := range inputs {
 		t = textinput.New()
-		t.Cursor.Style = style.FocusedStyle
 		t.CharLimit = 32
 
 		switch i {
 		case registerLogin:
 			t.Placeholder = "Login"
 			t.Focus()
-			t.PromptStyle = style.FocusedStyle
-			t.TextStyle = style.FocusedStyle
 		case registerPassword:
 			t.Placeholder = "Password"
 			t.EchoMode = textinput.EchoPassword

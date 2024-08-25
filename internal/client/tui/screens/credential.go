@@ -36,23 +36,16 @@ func NewCredentialModel(state *State) *CredentialModel {
 	var t textinput.Model
 	for i := range inputs {
 		t = textinput.New()
-		t.Cursor.Style = style.FocusedStyle
 		t.CharLimit = 100
 
 		switch i {
 		case credMetadata:
 			t.Placeholder = "Metadata"
 			t.Focus()
-			t.PromptStyle = style.FocusedStyle
-			t.TextStyle = style.FocusedStyle
 		case credLogin:
 			t.Placeholder = "Login"
-			t.PromptStyle = style.FocusedStyle
-			t.TextStyle = style.FocusedStyle
 		case credPassword:
 			t.Placeholder = "Password"
-			t.PromptStyle = style.FocusedStyle
-			t.TextStyle = style.FocusedStyle
 		}
 
 		inputs[i] = t

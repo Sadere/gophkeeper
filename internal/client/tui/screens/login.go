@@ -34,15 +34,12 @@ func NewLoginModel(state *State) *LoginModel {
 	var t textinput.Model
 	for i := range inputs {
 		t = textinput.New()
-		t.Cursor.Style = style.FocusedStyle
 		t.CharLimit = 32
 
 		switch i {
 		case loginLogin:
 			t.Placeholder = "Login"
 			t.Focus()
-			t.PromptStyle = style.FocusedStyle
-			t.TextStyle = style.FocusedStyle
 		case loginPassword:
 			t.Placeholder = "Password"
 			t.EchoMode = textinput.EchoPassword

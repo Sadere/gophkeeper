@@ -17,6 +17,15 @@ type InputGroup struct {
 }
 
 func NewInputGroup(inputs []textinput.Model) InputGroup {
+	// Set styles
+	for i, input := range inputs {
+		input.Cursor.Style = style.FocusedStyle
+		input.PromptStyle = style.FocusedStyle
+		input.TextStyle = style.FocusedStyle
+
+		inputs[i] = input
+	}
+
 	return InputGroup{
 		Inputs:   inputs,
 		InputNum: len(inputs),
@@ -96,7 +105,7 @@ func (m InputGroup) View() string {
 	if m.FocusIndex == m.InputNum {
 		button = style.FocusedStyle.Render("[ Submit ]")
 	}
-	fmt.Fprintf(&b, "\n\n%s\n\n", button)
+	fmt.Fprintf(&b, "\n\n%s\n", button)
 
 	return b.String()
 }
