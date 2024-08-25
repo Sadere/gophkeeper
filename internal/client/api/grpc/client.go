@@ -174,3 +174,30 @@ func (c *GRPCClient) SaveText(ctx context.Context, ID uint64, metadata, text str
 
 	return err
 }
+
+func (c *GRPCClient) SaveCard(ctx context.Context, ID uint64, metadata, number string, expMonth, expYear, cvv uint32) error {
+	// form gRPC request
+	request := &pb.SaveUserSecretV1Request{
+		MasterPassword: c.masterPassword,
+		Secret: &pb.Secret{
+			Id:        ID,
+			CreatedAt: timestamppb.Now(),
+			UpdatedAt: timestamppb.Now(),
+			Metadata:  metadata,
+			Type:      pb.SecretType_SECRET_TYPE_CARD,
+			Content: &pb.Secret_Card{
+				Card: &pb.Card{
+					Number:   number,
+					ExpMonth: expMonth,
+					ExpYear:  expYear,
+					Cvv:      cvv,
+				},
+			},
+		},
+	}
+
+	// performing gRPC call
+	_, err := c.secretsClient.SaveUserSecretV1(context.Background(), request)
+
+	return err
+}

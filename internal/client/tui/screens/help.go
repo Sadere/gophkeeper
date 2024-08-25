@@ -17,7 +17,7 @@ func RenderHelpForModel(model tea.Model) string {
 		help += " • enter: submit"
 	case *SecretListModel:
 		help += " • r: refresh list • a: add new • enter: view/edit"
-	case CredentialModel:
+	case CredentialModel, CardModel:
 		help += backHelp
 	case TextModel:
 		help += fmt.Sprintf("%s • tab: next input • shit+tab: previous input", backHelp)

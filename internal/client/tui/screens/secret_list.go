@@ -182,6 +182,9 @@ func (m *SecretListModel) Edit(preview *model.SecretPreview) (tea.Model, tea.Cmd
 	case string(model.TextSecret):
 		textModel := NewTextModel(m.state, preview.ID)
 		return NewRootModel(m.state).SwitchScreen(textModel)
+	case string(model.CardSecret):
+		cardModel := NewCardModel(m.state, preview.ID)
+		return NewRootModel(m.state).SwitchScreen(cardModel)
 	}
 
 	return m, nil
