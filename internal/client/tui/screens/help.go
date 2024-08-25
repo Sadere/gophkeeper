@@ -12,7 +12,7 @@ func RenderHelpForModel(model tea.Model) string {
 	case LoginModel, RegisterModel:
 		help += " • enter: submit"
 	case *SecretListModel:
-		help += " • r: refresh list • a: add new • enter: edit"
+		help += " • r: refresh list • a: add new • enter: view/edit"
 	}
 
 	return style.HelpStyle.Render(help)
