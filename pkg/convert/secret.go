@@ -48,6 +48,37 @@ func SecretToProto(secret *model.Secret) *pb.Secret {
 
 	pbSecret.Type = TypeToProto(secret.SType)
 
+	switch secret.SType {
+	case string(model.CredSecret):
+		pbSecret.Content = &pb.Secret_Credential{
+			Credential: &pb.Credential{
+				Login:    secret.Creds.Login,
+				Password: secret.Creds.Password,
+			},
+		}
+	case string(model.TextSecret):
+		pbSecret.Content = &pb.Secret_Text{
+			Text: &pb.Text{
+				Text: secret.Text.Content,
+			},
+		}
+	case string(model.BlobSecret):
+		pbSecret.Content = &pb.Secret_Blob{
+			Blob: &pb.Blob{
+				FileName: secret.Blob.FileName,
+			},
+		}
+	case string(model.CardSecret):
+		pbSecret.Content = &pb.Secret_Card{
+			Card: &pb.Card{
+				Number:   secret.Card.Number,
+				ExpYear:  secret.Card.ExpYear,
+				ExpMonth: secret.Card.ExpMonth,
+				Cvv:      secret.Card.Cvv,
+			},
+		}
+	}
+
 	return pbSecret
 }
 
