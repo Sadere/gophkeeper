@@ -11,6 +11,7 @@ import (
 	"github.com/Sadere/gophkeeper/internal/server/crypto"
 	"github.com/Sadere/gophkeeper/internal/server/model"
 	"github.com/Sadere/gophkeeper/internal/server/repository"
+	"github.com/Sadere/gophkeeper/internal/server/utils"
 
 	pkgModel "github.com/Sadere/gophkeeper/pkg/model"
 )
@@ -62,6 +63,15 @@ func (s *SecretService) SaveSecret(ctx context.Context, password string, secret 
 		payload, err = json.Marshal(secret.Creds)
 	case string(pkgModel.TextSecret):
 		payload, err = json.Marshal(secret.Text)
+	case string(pkgModel.CardSecret):
+		payload, err = json.Marshal(secret.Card)
+	}
+
+	// validate card number using Luhn's algo
+	if secret.SType == string(pkgModel.CardSecret) {
+		if ok := utils.CheckLuhn(secret.Card.Number); !ok {
+			return model.ErrNumberInvaliod
+		}
 	}
 
 	if err != nil {
@@ -125,6 +135,11 @@ func (s *SecretService) GetSecret(ctx context.Context, password string, ID uint6
 		secret.Text = &pkgModel.Text{}
 		if err := json.Unmarshal(decrypted, secret.Text); err != nil {
 			return nil, fmt.Errorf("failed to extract text: %w", err)
+		}
+	case string(pkgModel.CardSecret):
+		secret.Card = &pkgModel.Card{}
+		if err := json.Unmarshal(decrypted, secret.Card); err != nil {
+			return nil, fmt.Errorf("failed to extract card: %w", err)
 		}
 	}
 
