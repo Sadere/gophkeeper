@@ -22,15 +22,17 @@ const (
 
 type CredentialModel struct {
 	state      *State
+	credID     uint64
 	inputGroup components.InputGroup
 	errorMsg   string
 }
 
-func NewCredentialModel(state *State) *CredentialModel {
+func NewCredentialModel(state *State, ID uint64) *CredentialModel {
 	inputs := make([]textinput.Model, 3)
 
 	m := CredentialModel{
-		state: state,
+		state:  state,
+		credID: ID,
 	}
 
 	var t textinput.Model
@@ -49,6 +51,19 @@ func NewCredentialModel(state *State) *CredentialModel {
 		}
 
 		inputs[i] = t
+	}
+
+	// Load secret if in view/edit mode
+	if ID > 0 {
+		secret, err := m.state.client.LoadSecret(context.Background(), ID)
+		if err != nil {
+			m.errorMsg = err.Error()
+			return &m
+		}
+
+		inputs[credMetadata].SetValue(secret.Metadata)
+		inputs[credLogin].SetValue(secret.Creds.Login)
+		inputs[credPassword].SetValue(secret.Creds.Password)
 	}
 
 	m.inputGroup = components.NewInputGroup(inputs)
@@ -101,7 +116,7 @@ func (m CredentialModel) Submit() (tea.Model, tea.Cmd) {
 	}
 
 	// Save credential
-	err := m.state.client.SaveCredential(context.Background(), metadata, login, password)
+	err := m.state.client.SaveCredential(context.Background(), m.credID, metadata, login, password)
 	if err != nil {
 		m.errorMsg = err.Error()
 		return m, nil

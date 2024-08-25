@@ -14,6 +14,8 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+var errInvalidItem = "invalid item"
+
 type item struct {
 	Preview *model.SecretPreview
 }
@@ -139,6 +141,14 @@ func (m *SecretListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m.Reload()
 		case "a":
 			return m.AddNew()
+		case "enter":
+			selectedItem, ok := m.list.SelectedItem().(item)
+			if !ok {
+				m.errorMsg = errInvalidItem
+				return m, nil
+			}
+
+			return m.Edit(selectedItem.Preview)
 		}
 	}
 
@@ -162,6 +172,16 @@ func (m *SecretListModel) Reload() (tea.Model, tea.Cmd) {
 func (m *SecretListModel) AddNew() (tea.Model, tea.Cmd) {
 	chooseTypeModel := NewChooseTypeModel(m.state)
 	return NewRootModel(m.state).SwitchScreen(chooseTypeModel)
+}
+
+func (m *SecretListModel) Edit(preview *model.SecretPreview) (tea.Model, tea.Cmd) {
+	switch preview.SType {
+	case string(model.CredSecret):
+		credModel := NewCredentialModel(m.state, preview.ID)
+		return NewRootModel(m.state).SwitchScreen(credModel)
+	}
+
+	return m, nil
 }
 
 func (m *SecretListModel) View() string {

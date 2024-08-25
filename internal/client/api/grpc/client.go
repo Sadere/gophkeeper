@@ -108,11 +108,12 @@ func (c *GRPCClient) LoadPreviews(ctx context.Context) (model.SecretPreviews, er
 	return previews, nil
 }
 
-func (c *GRPCClient) SaveCredential(ctx context.Context, metadata, login, password string) error {
+func (c *GRPCClient) SaveCredential(ctx context.Context, ID uint64, metadata, login, password string) error {
 	// form gRPC request
 	request := &pb.SaveUserSecretV1Request{
-		MasterPassword: password,
+		MasterPassword: c.masterPassword,
 		Secret: &pb.Secret{
+			Id:        ID,
 			CreatedAt: timestamppb.Now(),
 			UpdatedAt: timestamppb.Now(),
 			Metadata:  metadata,
@@ -130,4 +131,22 @@ func (c *GRPCClient) SaveCredential(ctx context.Context, metadata, login, passwo
 	_, err := c.secretsClient.SaveUserSecretV1(context.Background(), request)
 
 	return err
+}
+
+func (c *GRPCClient) LoadSecret(ctx context.Context, ID uint64) (*model.Secret, error) {
+	// form gRPC request
+	request := &pb.GetUserSecretV1Request{
+		MasterPassword: c.masterPassword,
+		Id:             ID,
+	}
+
+	// performing gRPC call
+	response, err := c.secretsClient.GetUserSecretV1(context.Background(), request)
+	if err != nil {
+		return nil, err
+	}
+
+	secret := convert.ProtoToSecret(response.Secret)
+
+	return secret, nil
 }
