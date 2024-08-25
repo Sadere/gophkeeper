@@ -47,7 +47,7 @@ func Encrypt(password string, plaintext []byte) ([]byte, error) {
 // Decrypts data using master password
 func Decrypt(password string, encrypted []byte) ([]byte, error) {
 	// extract salt
-	saltIdx := len(encrypted) - constants.SaltLen - 1
+	saltIdx := len(encrypted) - constants.SaltLen
 	salt := encrypted[saltIdx:]
 
 	encrypted = encrypted[:saltIdx]
