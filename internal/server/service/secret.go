@@ -45,6 +45,7 @@ func (s *SecretService) GetUserSecrets(ctx context.Context, userID uint64) (pkgM
 	return secrets, nil
 }
 
+// Creates new or updates existsing secret and encrypts underlying secret data
 func (s *SecretService) SaveSecret(ctx context.Context, password string, secret *pkgModel.Secret) error {
 	var (
 		err                error
@@ -59,6 +60,8 @@ func (s *SecretService) SaveSecret(ctx context.Context, password string, secret 
 	switch secret.SType {
 	case string(pkgModel.CredSecret):
 		payload, err = json.Marshal(secret.Creds)
+	case string(pkgModel.TextSecret):
+		payload, err = json.Marshal(secret.Text)
 	}
 
 	if err != nil {
@@ -94,6 +97,7 @@ func (s *SecretService) SaveSecret(ctx context.Context, password string, secret 
 	return nil
 }
 
+// Returns decrypted secret
 func (s *SecretService) GetSecret(ctx context.Context, password string, ID uint64, userID uint64) (*pkgModel.Secret, error) {
 	secret, err := s.secretRepo.GetSecret(ctx, ID, userID)
 	if errors.Is(err, sql.ErrNoRows) {
@@ -116,6 +120,11 @@ func (s *SecretService) GetSecret(ctx context.Context, password string, ID uint6
 		secret.Creds = &pkgModel.Credentials{}
 		if err := json.Unmarshal(decrypted, secret.Creds); err != nil {
 			return nil, fmt.Errorf("failed to extract credentials: %w", err)
+		}
+	case string(pkgModel.TextSecret):
+		secret.Text = &pkgModel.Text{}
+		if err := json.Unmarshal(decrypted, secret.Text); err != nil {
+			return nil, fmt.Errorf("failed to extract text: %w", err)
 		}
 	}
 
