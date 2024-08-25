@@ -55,7 +55,7 @@ func NewLoginModel(state *State) *LoginModel {
 }
 
 func (m LoginModel) Init() tea.Cmd {
-	return nil
+	return m.inputGroup.Init()
 }
 
 func (m LoginModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {

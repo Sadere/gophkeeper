@@ -72,7 +72,7 @@ func NewCredentialModel(state *State, ID uint64) *CredentialModel {
 }
 
 func (m CredentialModel) Init() tea.Cmd {
-	return nil
+	return m.inputGroup.Init()
 }
 
 func (m CredentialModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {

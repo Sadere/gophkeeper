@@ -33,7 +33,7 @@ func NewInputGroup(inputs []textinput.Model) InputGroup {
 }
 
 func (m InputGroup) Init() tea.Cmd {
-	return nil
+	return textinput.Blink
 }
 
 func (m InputGroup) Update(msg tea.Msg) (tea.Model, tea.Cmd) {

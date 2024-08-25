@@ -66,7 +66,7 @@ func NewRegisterModel(state *State) *RegisterModel {
 }
 
 func (m RegisterModel) Init() tea.Cmd {
-	return nil
+	return m.inputGroup.Init()
 }
 
 func (m RegisterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
