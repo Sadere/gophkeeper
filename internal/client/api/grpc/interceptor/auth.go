@@ -24,3 +24,20 @@ func AddToken(token *string) grpc.UnaryClientInterceptor {
 		return invoker(mdCtx, method, req, reply, cc, opts...)
 	}
 }
+
+func AddTokenStream(token *string) grpc.StreamClientInterceptor {
+	return func(ctx context.Context, desc *grpc.StreamDesc, cc *grpc.ClientConn, method string, streamer grpc.Streamer, opts ...grpc.CallOption) (grpc.ClientStream, error) {
+		// pass request if token is empty
+		if len(*token) == 0 {
+			return streamer(ctx, desc, cc, method, opts...)
+		}
+
+		// add access token to metadata
+		md := metadata.New(map[string]string{
+			constants.AccessTokenHeader: *token,
+		})
+
+		mdCtx := metadata.NewOutgoingContext(ctx, md)
+		return streamer(mdCtx, desc, cc, method, opts...)
+	}
+}

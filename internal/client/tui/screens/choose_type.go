@@ -61,6 +61,10 @@ func (m *ChooseTypeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// Add text screen
 				cardScreen := NewCardModel(m.state, 0)
 				return NewRootModel(m.state).SwitchScreen(cardScreen)
+			case selectBlob:
+				// Upload file screen
+				fileScreen := NewFileModel(m.state, 0)
+				return NewRootModel(m.state).SwitchScreen(fileScreen)
 			}
 		}
 	}

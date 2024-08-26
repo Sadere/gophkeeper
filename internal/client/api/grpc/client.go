@@ -3,6 +3,10 @@ package grpc
 import (
 	"context"
 	"fmt"
+	"io"
+	"log"
+	"os"
+	"path/filepath"
 
 	"github.com/Sadere/gophkeeper/internal/client/api"
 	"github.com/Sadere/gophkeeper/internal/client/api/grpc/interceptor"
@@ -24,13 +28,15 @@ type GRPCClient struct {
 	secretsClient  pb.SecretsServiceClient
 	accessToken    string
 	masterPassword string
+	chunkSize      int
 }
 
 var _ api.IApiClient = &GRPCClient{}
 
 func NewGRPCClient(cfg *config.Config) (*GRPCClient, error) {
 	newClient := GRPCClient{
-		config: cfg,
+		config:    cfg,
+		chunkSize: constants.ChunkSize,
 	}
 
 	// create gRPC client
@@ -40,11 +46,14 @@ func NewGRPCClient(cfg *config.Config) (*GRPCClient, error) {
 			insecure.NewCredentials(),
 		),
 
-		// interceptors...
+		// Unary interceptors
 		grpc.WithChainUnaryInterceptor(
 			interceptor.Timeout(constants.DefaultClientTimeout),
 			interceptor.AddToken(&newClient.accessToken),
 		),
+
+		// Stream interceptor
+		grpc.WithStreamInterceptor(interceptor.AddTokenStream(&newClient.accessToken)),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create gRPC client: %w", err)
@@ -198,6 +207,62 @@ func (c *GRPCClient) SaveCard(ctx context.Context, ID uint64, metadata, number s
 
 	// performing gRPC call
 	_, err := c.secretsClient.SaveUserSecretV1(context.Background(), request)
+
+	return err
+}
+
+func (c *GRPCClient) UploadFile(ctx context.Context, metadata, filePath string) error {
+	// Open file
+	f, err := os.Open(filePath)
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		err := f.Close()
+		if err != nil {
+			log.Println(fmt.Errorf("failed to close file: %w", err))
+		}
+	}()
+
+	fileName := filepath.Base(filePath)
+
+	stream, err := c.secretsClient.UploadFileV1(ctx)
+	if err != nil {
+		return err
+	}
+
+	buf := make([]byte, c.chunkSize)
+
+	for {
+		n, err := f.Read(buf)
+
+		// File is done uploading
+		if err == io.EOF {
+			break
+		}
+
+		// I/O error
+		if err != nil {
+			return err
+		}
+
+		chunk := buf[:n]
+
+		// Send chunk
+		err = stream.Send(&pb.UploadFileV1Request{
+			Metadata:       metadata,
+			FileName:       fileName,
+			MasterPassword: c.masterPassword,
+			Chunk:          chunk,
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	// Close stream
+	_, err = stream.CloseAndRecv()
 
 	return err
 }
