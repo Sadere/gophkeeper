@@ -10,6 +10,7 @@ import (
 var (
 	DefaultAddress = ":8080"
 	DefaultTLS     = false
+	DefaultDir     = "./upload/"
 )
 
 type Config struct {
@@ -18,6 +19,7 @@ type Config struct {
 	PostgresDSN string
 	LogLevel    string
 	SecretKey   string // Secret key for jwt token signing
+	UploadDir   string // Directory for uploaded files
 }
 
 // Parses config from provided command line arguments or from environment variables and returns config
@@ -28,6 +30,7 @@ func NewConfig(args []string) (*Config, error) {
 		flagAddress     string
 		flagEnableTLS   bool
 		flagPostgresDSN string
+		flagUploadDir   string
 	)
 
 	flags := pflag.NewFlagSet(os.Args[0], pflag.ContinueOnError)
@@ -36,6 +39,7 @@ func NewConfig(args []string) (*Config, error) {
 	flags.StringVarP(&flagAddress, "address", "a", DefaultAddress, "Address to listen on")
 	flags.BoolVarP(&flagEnableTLS, "tls", "t", DefaultTLS, "Use TLS, default is false")
 	flags.StringVarP(&flagPostgresDSN, "dsn", "d", "", "DSN string for PostgreSQL connection")
+	flags.StringVarP(&flagUploadDir, "dir", "u", "", "Path for user uploaded files")
 
 	if err := flags.Parse(args); err != nil {
 		return nil, err
@@ -65,6 +69,12 @@ func NewConfig(args []string) (*Config, error) {
 		return nil, errors.New("SECRET_KEY env variable is not provided")
 	}
 
+	if envUploadDir := os.Getenv("UPLOAD_DIR"); len(envUploadDir) > 0 {
+		cfg.UploadDir = envUploadDir
+	} else if len(flagUploadDir) > 0 {
+		cfg.UploadDir = flagUploadDir
+	}
+
 	return cfg, nil
 }
 
@@ -72,5 +82,6 @@ func defaultConfig() *Config {
 	return &Config{
 		Address:   DefaultAddress,
 		EnableTLS: DefaultTLS,
+		UploadDir: DefaultDir,
 	}
 }

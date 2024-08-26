@@ -19,4 +19,7 @@ var (
 
 	// Length of salt for key derivation
 	SaltLen = 8
+
+	// Chunk size for file uplaod and download
+	ChunkSize = 1024 * 1024 * 2
 )

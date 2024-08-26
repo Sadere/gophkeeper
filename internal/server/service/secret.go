@@ -18,7 +18,7 @@ import (
 
 type ISecretService interface {
 	GetUserSecrets(ctx context.Context, userID uint64) (pkgModel.Secrets, error)
-	SaveSecret(ctx context.Context, password string, secret *pkgModel.Secret) error
+	SaveSecret(ctx context.Context, password string, secret *pkgModel.Secret) (uint64, error)
 	GetSecret(ctx context.Context, password string, ID uint64, userID uint64) (*pkgModel.Secret, error)
 }
 
@@ -47,14 +47,15 @@ func (s *SecretService) GetUserSecrets(ctx context.Context, userID uint64) (pkgM
 }
 
 // Creates new or updates existsing secret and encrypts underlying secret data
-func (s *SecretService) SaveSecret(ctx context.Context, password string, secret *pkgModel.Secret) error {
+func (s *SecretService) SaveSecret(ctx context.Context, password string, secret *pkgModel.Secret) (uint64, error) {
 	var (
 		err                error
 		payload, encrypted []byte
+		secretID           uint64
 	)
 
 	if ok := validateType(secret.SType); !ok {
-		return model.ErrWrongSecretType
+		return 0, model.ErrWrongSecretType
 	}
 
 	// marshal corresponding data
@@ -65,23 +66,25 @@ func (s *SecretService) SaveSecret(ctx context.Context, password string, secret 
 		payload, err = json.Marshal(secret.Text)
 	case string(pkgModel.CardSecret):
 		payload, err = json.Marshal(secret.Card)
+	case string(pkgModel.BlobSecret):
+		payload, err = json.Marshal(secret.Blob)
 	}
 
 	// validate card number using Luhn's algo
 	if secret.SType == string(pkgModel.CardSecret) {
 		if ok := utils.CheckLuhn(secret.Card.Number); !ok {
-			return model.ErrNumberInvaliod
+			return 0, model.ErrNumberInvaliod
 		}
 	}
 
 	if err != nil {
-		return fmt.Errorf("failed to save secret data: %w", err)
+		return 0, fmt.Errorf("failed to save secret data: %w", err)
 	}
 
 	// Encrypt secret data
 	encrypted, err = crypto.Encrypt(password, payload)
 	if err != nil {
-		return fmt.Errorf("failed to encrypt data: %w", err)
+		return 0, fmt.Errorf("failed to encrypt data: %w", err)
 	}
 
 	secret.Payload = encrypted
@@ -92,19 +95,20 @@ func (s *SecretService) SaveSecret(ctx context.Context, password string, secret 
 		_, err = s.secretRepo.GetSecret(ctx, secret.ID, secret.UserID)
 		if err != nil {
 			// Secret not found for this user
-			return model.ErrSecretNotFound
+			return 0, model.ErrSecretNotFound
 		}
 
 		err = s.secretRepo.Update(ctx, secret)
+		secretID = secret.ID
 	} else {
-		_, err = s.secretRepo.Create(ctx, secret)
+		secretID, err = s.secretRepo.Create(ctx, secret)
 	}
 
 	if err != nil {
-		return fmt.Errorf("failed to store secret: %w", err)
+		return 0, fmt.Errorf("failed to store secret: %w", err)
 	}
 
-	return nil
+	return secretID, nil
 }
 
 // Returns decrypted secret
@@ -140,6 +144,11 @@ func (s *SecretService) GetSecret(ctx context.Context, password string, ID uint6
 		secret.Card = &pkgModel.Card{}
 		if err := json.Unmarshal(decrypted, secret.Card); err != nil {
 			return nil, fmt.Errorf("failed to extract card: %w", err)
+		}
+	case string(pkgModel.BlobSecret):
+		secret.Blob = &pkgModel.Blob{}
+		if err := json.Unmarshal(decrypted, secret.Blob); err != nil {
+			return nil, fmt.Errorf("failed to extract blob: %w", err)
 		}
 	}
 

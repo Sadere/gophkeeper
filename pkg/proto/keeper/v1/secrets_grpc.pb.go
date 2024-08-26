@@ -24,6 +24,7 @@ const (
 	SecretsService_SecretPreviewsV1_FullMethodName = "/proto.keeper.v1.SecretsService/SecretPreviewsV1"
 	SecretsService_SaveUserSecretV1_FullMethodName = "/proto.keeper.v1.SecretsService/SaveUserSecretV1"
 	SecretsService_GetUserSecretV1_FullMethodName  = "/proto.keeper.v1.SecretsService/GetUserSecretV1"
+	SecretsService_UploadFileV1_FullMethodName     = "/proto.keeper.v1.SecretsService/UploadFileV1"
 )
 
 // SecretsServiceClient is the client API for SecretsService service.
@@ -33,6 +34,7 @@ type SecretsServiceClient interface {
 	SecretPreviewsV1(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*SecretPreviewsV1Response, error)
 	SaveUserSecretV1(ctx context.Context, in *SaveUserSecretV1Request, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetUserSecretV1(ctx context.Context, in *GetUserSecretV1Request, opts ...grpc.CallOption) (*GetUserSecretV1Response, error)
+	UploadFileV1(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[UploadFileV1Request, emptypb.Empty], error)
 }
 
 type secretsServiceClient struct {
@@ -73,6 +75,19 @@ func (c *secretsServiceClient) GetUserSecretV1(ctx context.Context, in *GetUserS
 	return out, nil
 }
 
+func (c *secretsServiceClient) UploadFileV1(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[UploadFileV1Request, emptypb.Empty], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &SecretsService_ServiceDesc.Streams[0], SecretsService_UploadFileV1_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[UploadFileV1Request, emptypb.Empty]{ClientStream: stream}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type SecretsService_UploadFileV1Client = grpc.ClientStreamingClient[UploadFileV1Request, emptypb.Empty]
+
 // SecretsServiceServer is the server API for SecretsService service.
 // All implementations must embed UnimplementedSecretsServiceServer
 // for forward compatibility.
@@ -80,6 +95,7 @@ type SecretsServiceServer interface {
 	SecretPreviewsV1(context.Context, *emptypb.Empty) (*SecretPreviewsV1Response, error)
 	SaveUserSecretV1(context.Context, *SaveUserSecretV1Request) (*emptypb.Empty, error)
 	GetUserSecretV1(context.Context, *GetUserSecretV1Request) (*GetUserSecretV1Response, error)
+	UploadFileV1(grpc.ClientStreamingServer[UploadFileV1Request, emptypb.Empty]) error
 	mustEmbedUnimplementedSecretsServiceServer()
 }
 
@@ -98,6 +114,9 @@ func (UnimplementedSecretsServiceServer) SaveUserSecretV1(context.Context, *Save
 }
 func (UnimplementedSecretsServiceServer) GetUserSecretV1(context.Context, *GetUserSecretV1Request) (*GetUserSecretV1Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserSecretV1 not implemented")
+}
+func (UnimplementedSecretsServiceServer) UploadFileV1(grpc.ClientStreamingServer[UploadFileV1Request, emptypb.Empty]) error {
+	return status.Errorf(codes.Unimplemented, "method UploadFileV1 not implemented")
 }
 func (UnimplementedSecretsServiceServer) mustEmbedUnimplementedSecretsServiceServer() {}
 func (UnimplementedSecretsServiceServer) testEmbeddedByValue()                        {}
@@ -174,6 +193,13 @@ func _SecretsService_GetUserSecretV1_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SecretsService_UploadFileV1_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(SecretsServiceServer).UploadFileV1(&grpc.GenericServerStream[UploadFileV1Request, emptypb.Empty]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type SecretsService_UploadFileV1Server = grpc.ClientStreamingServer[UploadFileV1Request, emptypb.Empty]
+
 // SecretsService_ServiceDesc is the grpc.ServiceDesc for SecretsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -194,6 +220,12 @@ var SecretsService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _SecretsService_GetUserSecretV1_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "UploadFileV1",
+			Handler:       _SecretsService_UploadFileV1_Handler,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "proto/keeper/v1/secrets.proto",
 }

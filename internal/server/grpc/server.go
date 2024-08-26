@@ -40,9 +40,17 @@ func (s *KeeperServer) Register() (*grpc.Server, error) {
 	// Authentication
 	srvInterceptors = append(srvInterceptors, interceptor.Authentication([]byte(s.config.SecretKey)))
 
-	srv := grpc.NewServer(grpc.ChainUnaryInterceptor(
-		srvInterceptors...,
-	))
+	srv := grpc.NewServer(
+		// Chain of unary interceptors
+		grpc.ChainUnaryInterceptor(
+			srvInterceptors...,
+		),
+
+		// Stream interceptor
+		grpc.StreamInterceptor(
+			interceptor.StreamAuthentication([]byte(s.config.SecretKey)),
+		),
+	)
 
 	pb.RegisterAuthServiceServer(srv, s)
 	pb.RegisterSecretsServiceServer(srv, s)
