@@ -3,9 +3,9 @@ package screens
 import (
 	"context"
 	"fmt"
-	"log"
 	"strings"
 
+	"github.com/Sadere/gophkeeper/internal/client/tui/components"
 	"github.com/Sadere/gophkeeper/internal/client/tui/style"
 
 	"github.com/charmbracelet/bubbles/textarea"
@@ -36,16 +36,10 @@ func NewTextModel(state *State, ID uint64) *TextModel {
 	m := TextModel{
 		state:         state,
 		textID:        ID,
-		metadataInput: textinput.New(),
+		metadataInput: components.NewMetaDataInput(),
 		content:       textarea.New(),
 		cursor:        1,
 	}
-
-	m.metadataInput.Cursor.Style = style.FocusedStyle
-	m.metadataInput.PromptStyle = style.FocusedStyle
-	m.metadataInput.TextStyle = style.FocusedStyle
-	m.metadataInput.Focus()
-	m.metadataInput.Placeholder = "Metadata"
 
 	m.content.Placeholder = "Enter any text"
 
@@ -115,7 +109,6 @@ func (m TextModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else {
 				m.content.Blur()
 			}
-			log.Printf("%d\n", m.cursor)
 
 			return m, tea.Batch(cmds...)
 		}
