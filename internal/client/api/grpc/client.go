@@ -266,3 +266,77 @@ func (c *GRPCClient) UploadFile(ctx context.Context, metadata, filePath string) 
 
 	return err
 }
+
+func (c *GRPCClient) DownloadFile(ctx context.Context, ID uint64, fileName string) error {
+	// open file
+	f, err := c.openFile(c.config.DownloadPath, fileName)
+	if err != nil {
+		return fmt.Errorf("failed to open file: %w", err)
+	}
+
+	defer func() {
+		err := f.Close()
+		if err != nil {
+			log.Println("failed to close file: ", err)
+		}
+	}()
+
+	req := &pb.DownloadFileV1Request{
+		Id:             ID,
+		MasterPassword: c.masterPassword,
+	}
+
+	srv, err := c.secretsClient.DownloadFileV1(ctx, req)
+	if err != nil {
+		return fmt.Errorf("unable to establish connection: %w", err)
+	}
+
+	// Start download
+	for {
+		res, err := srv.Recv()
+
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			return fmt.Errorf("transfer session was interrupted: %w", err)
+		}
+
+		// Write chunk to file
+		_, err = f.Write(res.Chunk)
+		if err != nil {
+			return fmt.Errorf("error writing chunk: %w", err)
+		}
+	}
+
+	return nil
+}
+
+func (c *GRPCClient) openFile(path, fileName string) (*os.File, error) {
+	var f *os.File
+
+	// Create download dir if not exists
+	_, err := os.Stat(path)
+
+	if os.IsNotExist(err) {
+		err = os.MkdirAll(path, os.ModePerm)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create download dir: %w", err)
+		}
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Open file
+	filePath := fmt.Sprintf("%s/%s", path, fileName)
+
+	f, err = os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		return nil, fmt.Errorf("failed to open file: %w", err)
+	}
+
+	return f, nil
+}

@@ -18,4 +18,5 @@ type IApiClient interface {
 	SaveCard(ctx context.Context, ID uint64, metadata, number string, expMonth, expYear, cvv uint32) error
 
 	UploadFile(ctx context.Context, metadata string, filePath string) error
+	DownloadFile(ctx context.Context, ID uint64, fileName string) error
 }

@@ -11,8 +11,9 @@ import (
 
 	"github.com/charmbracelet/bubbles/filepicker"
 	"github.com/charmbracelet/bubbles/textinput"
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+
+	tea "github.com/charmbracelet/bubbletea"
 )
 
 type status int
@@ -20,8 +21,10 @@ type status int
 const (
 	// Statuses
 	fileStart status = iota
+	fileStartDownload
 	filePicking
 	fileUpload
+	fileDownload
 	fileComplete
 	fileError
 )
@@ -38,6 +41,7 @@ type FileModel struct {
 	metadataInput textinput.Model
 	filepicker    filepicker.Model
 	status        status
+	isDownload    bool
 	selectedFile  string
 	errorMsg      string
 }
@@ -60,18 +64,13 @@ func NewFileModel(state *State, ID uint64) *FileModel {
 		m.errorMsg = fmt.Sprintf("failed to get user home dir: %s", err.Error())
 	}
 
-	m.filepicker = fp
-
-	// Load secret if in view/edit mode
+	// Set download mode if ID is passed
 	if ID > 0 {
-		secret, err := m.state.client.LoadSecret(context.Background(), ID)
-		if err != nil {
-			m.errorMsg = err.Error()
-			return &m
-		}
-
-		m.metadataInput.SetValue(secret.Metadata)
+		m.isDownload = true
+		m.status = fileStartDownload
 	}
+
+	m.filepicker = fp
 
 	return &m
 }
@@ -93,23 +92,33 @@ func (m FileModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			mainScreen := NewSecretListModel(m.state)
 			return NewRootModel(m.state).SwitchScreen(mainScreen)
 		case "p":
-			// Unfocus metadata
-			m.metadataInput.Blur()
-			m.metadataInput.PromptStyle = style.BlurredStyle
-			m.metadataInput.TextStyle = style.BlurredStyle
+			if m.status == fileStart {
+				// Unfocus metadata
+				m.metadataInput.Blur()
+				m.metadataInput.PromptStyle = style.BlurredStyle
+				m.metadataInput.TextStyle = style.BlurredStyle
 
-			m.status = filePicking
-			return m, m.filepicker.Init()
+				m.status = filePicking
+				return m, m.filepicker.Init()
+			}
 		case "b":
-			// Clear errors
-			m.errorMsg = ""
+			if m.status == filePicking {
+				// Clear errors
+				m.errorMsg = ""
 
-			// Focus metadata input
-			m.metadataInput.PromptStyle = style.FocusedStyle
-			m.metadataInput.TextStyle = style.FocusedStyle
+				// Focus metadata input
+				m.metadataInput.PromptStyle = style.FocusedStyle
+				m.metadataInput.TextStyle = style.FocusedStyle
 
-			m.status = fileStart
-			return m, m.metadataInput.Focus()
+				m.status = fileStart
+				return m, m.metadataInput.Focus()
+			}
+		case "d":
+			if m.status == fileStartDownload {
+				m.status = fileDownload
+
+				return m, m.downloadStart()
+			}
 		}
 	case fileCompleteMsg:
 		m.status = fileComplete
@@ -132,6 +141,7 @@ func (m FileModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.filepicker, cmd = m.filepicker.Update(msg)
 		cmds = append(cmds, cmd)
 
+		// Upload file if user picked a file
 		if didSelect, path := m.filepicker.DidSelectFile(msg); didSelect {
 			m.selectedFile = path
 
@@ -162,13 +172,37 @@ func (m *FileModel) uploadStart() tea.Cmd {
 	}
 }
 
+func (m *FileModel) downloadStart() tea.Cmd {
+	return func() tea.Msg {
+		// load secret
+		secret, err := m.state.client.LoadSecret(context.Background(), m.secretID)
+		if err != nil {
+			return errMsg{msg: err.Error()}
+		}
+
+		// download file
+		err = m.state.client.DownloadFile(context.Background(), m.secretID, secret.Blob.FileName)
+		if err != nil {
+			return errMsg{msg: err.Error()}
+		}
+
+		return fileCompleteMsg{}
+	}
+}
+
 func (m FileModel) View() string {
 	var b strings.Builder
 
-	b.WriteString("Pick a file and enter metadata\n")
+	if m.isDownload {
+		// Download mode
+		b.WriteString("Press d to start file download or esc to go back\n")
+	} else {
+		// Upload mode
+		b.WriteString("Pick a file and enter metadata\n")
 
-	b.WriteString(m.metadataInput.View())
-	b.WriteString("\n\n")
+		b.WriteString(m.metadataInput.View())
+		b.WriteString("\n\n")
+	}
 
 	switch m.status {
 	case fileStart:
@@ -178,10 +212,12 @@ func (m FileModel) View() string {
 		b.WriteString(m.filepicker.View())
 	case fileUpload:
 		b.WriteString("File upload in progress, please wait...")
+	case fileDownload:
+		b.WriteString("File download in progress, please wait...")
 	case fileComplete:
 		b.WriteString("File transfer is done, press esc to go back")
 	case fileError:
-		b.WriteString("Error occured during upload, press b to start over")
+		b.WriteString("Error occured during file transfer")
 	}
 
 	body := style.RenderBox(b.String())
