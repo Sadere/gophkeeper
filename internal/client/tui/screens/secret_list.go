@@ -134,7 +134,7 @@ func (m SecretListModel) Init() tea.Cmd {
 func (m *SecretListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-		m.list.SetSize(msg.Width, msg.Height)
+		m.list.SetSize(msg.Width, msg.Height-4)
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "r":

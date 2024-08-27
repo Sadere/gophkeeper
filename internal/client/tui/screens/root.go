@@ -1,6 +1,10 @@
 package screens
 
 import (
+	"fmt"
+
+	"github.com/Sadere/gophkeeper/internal/client/tui/style"
+	"github.com/Sadere/gophkeeper/internal/client/version"
 	"github.com/charmbracelet/lipgloss"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -51,11 +55,15 @@ func (m RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m RootModel) View() string {
+	// Show build info on top
+	buildInfo := fmt.Sprintf("GophKeeper version: %s built at: %s\n\n", version.Version(), version.BuildDate())
+	infoBox := style.HelpStyle.Render(buildInfo)
+
 	content := m.currentWindow.View()
 
 	middleBox := lipgloss.NewStyle().
 		Width(m.state.Width()).
-		Height(m.state.Height() - 1)
+		Height(m.state.Height() - 4)
 
 	body := middleBox.AlignHorizontal(lipgloss.Center).
 		AlignVertical(lipgloss.Center).
@@ -64,7 +72,8 @@ func (m RootModel) View() string {
 	help := RenderHelpForModel(m.currentWindow)
 
 	return lipgloss.JoinVertical(
-		lipgloss.Left,
+		lipgloss.Top,
+		infoBox,
 		body,
 		help,
 	)
