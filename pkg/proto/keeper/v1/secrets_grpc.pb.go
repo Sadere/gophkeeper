@@ -25,6 +25,7 @@ const (
 	SecretsService_SaveUserSecretV1_FullMethodName = "/proto.keeper.v1.SecretsService/SaveUserSecretV1"
 	SecretsService_GetUserSecretV1_FullMethodName  = "/proto.keeper.v1.SecretsService/GetUserSecretV1"
 	SecretsService_UploadFileV1_FullMethodName     = "/proto.keeper.v1.SecretsService/UploadFileV1"
+	SecretsService_DownloadFileV1_FullMethodName   = "/proto.keeper.v1.SecretsService/DownloadFileV1"
 )
 
 // SecretsServiceClient is the client API for SecretsService service.
@@ -35,6 +36,7 @@ type SecretsServiceClient interface {
 	SaveUserSecretV1(ctx context.Context, in *SaveUserSecretV1Request, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetUserSecretV1(ctx context.Context, in *GetUserSecretV1Request, opts ...grpc.CallOption) (*GetUserSecretV1Response, error)
 	UploadFileV1(ctx context.Context, opts ...grpc.CallOption) (grpc.ClientStreamingClient[UploadFileV1Request, emptypb.Empty], error)
+	DownloadFileV1(ctx context.Context, in *DownloadFileV1Request, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DownloadFileV1Response], error)
 }
 
 type secretsServiceClient struct {
@@ -88,6 +90,25 @@ func (c *secretsServiceClient) UploadFileV1(ctx context.Context, opts ...grpc.Ca
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type SecretsService_UploadFileV1Client = grpc.ClientStreamingClient[UploadFileV1Request, emptypb.Empty]
 
+func (c *secretsServiceClient) DownloadFileV1(ctx context.Context, in *DownloadFileV1Request, opts ...grpc.CallOption) (grpc.ServerStreamingClient[DownloadFileV1Response], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &SecretsService_ServiceDesc.Streams[1], SecretsService_DownloadFileV1_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[DownloadFileV1Request, DownloadFileV1Response]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type SecretsService_DownloadFileV1Client = grpc.ServerStreamingClient[DownloadFileV1Response]
+
 // SecretsServiceServer is the server API for SecretsService service.
 // All implementations must embed UnimplementedSecretsServiceServer
 // for forward compatibility.
@@ -96,6 +117,7 @@ type SecretsServiceServer interface {
 	SaveUserSecretV1(context.Context, *SaveUserSecretV1Request) (*emptypb.Empty, error)
 	GetUserSecretV1(context.Context, *GetUserSecretV1Request) (*GetUserSecretV1Response, error)
 	UploadFileV1(grpc.ClientStreamingServer[UploadFileV1Request, emptypb.Empty]) error
+	DownloadFileV1(*DownloadFileV1Request, grpc.ServerStreamingServer[DownloadFileV1Response]) error
 	mustEmbedUnimplementedSecretsServiceServer()
 }
 
@@ -117,6 +139,9 @@ func (UnimplementedSecretsServiceServer) GetUserSecretV1(context.Context, *GetUs
 }
 func (UnimplementedSecretsServiceServer) UploadFileV1(grpc.ClientStreamingServer[UploadFileV1Request, emptypb.Empty]) error {
 	return status.Errorf(codes.Unimplemented, "method UploadFileV1 not implemented")
+}
+func (UnimplementedSecretsServiceServer) DownloadFileV1(*DownloadFileV1Request, grpc.ServerStreamingServer[DownloadFileV1Response]) error {
+	return status.Errorf(codes.Unimplemented, "method DownloadFileV1 not implemented")
 }
 func (UnimplementedSecretsServiceServer) mustEmbedUnimplementedSecretsServiceServer() {}
 func (UnimplementedSecretsServiceServer) testEmbeddedByValue()                        {}
@@ -200,6 +225,17 @@ func _SecretsService_UploadFileV1_Handler(srv interface{}, stream grpc.ServerStr
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
 type SecretsService_UploadFileV1Server = grpc.ClientStreamingServer[UploadFileV1Request, emptypb.Empty]
 
+func _SecretsService_DownloadFileV1_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(DownloadFileV1Request)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(SecretsServiceServer).DownloadFileV1(m, &grpc.GenericServerStream[DownloadFileV1Request, DownloadFileV1Response]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type SecretsService_DownloadFileV1Server = grpc.ServerStreamingServer[DownloadFileV1Response]
+
 // SecretsService_ServiceDesc is the grpc.ServiceDesc for SecretsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -225,6 +261,11 @@ var SecretsService_ServiceDesc = grpc.ServiceDesc{
 			StreamName:    "UploadFileV1",
 			Handler:       _SecretsService_UploadFileV1_Handler,
 			ClientStreams: true,
+		},
+		{
+			StreamName:    "DownloadFileV1",
+			Handler:       _SecretsService_DownloadFileV1_Handler,
+			ServerStreams: true,
 		},
 	},
 	Metadata: "proto/keeper/v1/secrets.proto",
