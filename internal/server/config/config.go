@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	DefaultAddress = ":8080"
+	DefaultAddress = "0.0.0.0:8080"
 	DefaultTLS     = false
 	DefaultDir     = "./upload/"
 )

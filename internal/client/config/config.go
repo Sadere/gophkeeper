@@ -13,7 +13,7 @@ type Config struct {
 }
 
 const (
-	DefaultServerAddress = "localhost:8080"
+	DefaultServerAddress = "0.0.0.0:8080"
 	DefaultTLS           = false
 	DefaultDownloadPath  = "./download/"
 )
