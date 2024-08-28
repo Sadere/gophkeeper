@@ -37,6 +37,18 @@ func NewConfig(args []string) (*Config, error) {
 		return nil, err
 	}
 
+	if len(flagAddress) > 0 {
+		cfg.ServerAddress = flagAddress
+	}
+
+	if flagEnableTLS {
+		cfg.EnableTLS = true
+	}
+
+	if len(flagDownloadPath) > 0 {
+		cfg.DownloadPath = flagDownloadPath
+	}
+
 	return cfg, nil
 }
 
