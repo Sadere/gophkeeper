@@ -2,16 +2,20 @@ package grpc
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
 
+	"github.com/Sadere/gophkeeper/cert"
 	"github.com/Sadere/gophkeeper/internal/client/api"
 	"github.com/Sadere/gophkeeper/internal/client/api/grpc/interceptor"
 	"github.com/Sadere/gophkeeper/internal/client/config"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -34,26 +38,56 @@ type GRPCClient struct {
 var _ api.IApiClient = &GRPCClient{}
 
 func NewGRPCClient(cfg *config.Config) (*GRPCClient, error) {
+	var opts []grpc.DialOption
+
 	newClient := GRPCClient{
 		config:    cfg,
 		chunkSize: constants.ChunkSize,
 	}
 
-	// create gRPC client
-	c, err := grpc.NewClient(
-		cfg.ServerAddress,
-		grpc.WithTransportCredentials(
-			insecure.NewCredentials(),
-		),
-
-		// Unary interceptors
+	// Unary interceptors
+	opts = append(
+		opts,
 		grpc.WithChainUnaryInterceptor(
 			interceptor.Timeout(constants.DefaultClientTimeout),
 			interceptor.AddToken(&newClient.accessToken),
 		),
+	)
 
-		// Stream interceptor
+	// Stream interceptor
+	opts = append(
+		opts,
 		grpc.WithStreamInterceptor(interceptor.AddTokenStream(&newClient.accessToken)),
+	)
+
+	// TLS
+	if cfg.EnableTLS {
+		tlsCredential, err := loadTLSConfig("ca-cert.pem", "client-cert.pem", "client-key.pem")
+		if err != nil {
+			return nil, fmt.Errorf("failed to load TLS config: %w", err)
+		}
+
+		opts = append(
+			opts,
+			grpc.WithTransportCredentials(
+				tlsCredential,
+			),
+		)
+	} else {
+		opts = append(
+			opts,
+			grpc.WithTransportCredentials(
+				insecure.NewCredentials(),
+			),
+		)
+	}
+
+	log.Printf("%+v %+v\n", opts, cfg.ServerAddress)
+
+	// create gRPC client
+	c, err := grpc.NewClient(
+		cfg.ServerAddress,
+		opts...,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create gRPC client: %w", err)
@@ -67,6 +101,46 @@ func NewGRPCClient(cfg *config.Config) (*GRPCClient, error) {
 	newClient.secretsClient = secretsClient
 
 	return &newClient, nil
+}
+
+func loadTLSConfig(caCertFile, clientCertFile, clientKeyFile string) (credentials.TransportCredentials, error) {
+	// Read CA cert
+	caPem, err := cert.Cert.ReadFile(caCertFile)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read CA cert: %w", err)
+	}
+
+	// Read client cert
+	clientCertPEM, err := cert.Cert.ReadFile(clientCertFile)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read client cert: %w", err)
+	}
+
+	// Read client key
+	clientKeyPEM, err := cert.Cert.ReadFile(clientKeyFile)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read client key: %w", err)
+	}
+
+	// Create key pair
+	clientCert, err := tls.X509KeyPair(clientCertPEM, clientKeyPEM)
+	if err != nil {
+		return nil, fmt.Errorf("failed to load x509 key pair: %w", err)
+	}
+
+	// Create cert pool and append CA's cert
+	certPool := x509.NewCertPool()
+	if !certPool.AppendCertsFromPEM(caPem) {
+		return nil, fmt.Errorf("failed to append CA cert to cert pool: %w", err)
+	}
+
+	// Create config
+	config := &tls.Config{
+		Certificates: []tls.Certificate{clientCert},
+		RootCAs:      certPool,
+	}
+
+	return credentials.NewTLS(config), nil
 }
 
 func (c *GRPCClient) Login(ctx context.Context, login string, password string) (string, error) {
