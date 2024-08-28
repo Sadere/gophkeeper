@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
+	"sync"
 
 	"github.com/Sadere/gophkeeper/cert"
 	"github.com/Sadere/gophkeeper/internal/server/config"
@@ -20,11 +21,14 @@ import (
 type KeeperServer struct {
 	pb.UnimplementedAuthServiceServer
 	pb.UnimplementedSecretsServiceServer
+	pb.UnimplementedNotificationServiceServer
 
 	config        *config.Config
 	userService   service.IUserService
 	secretService service.ISecretService
 	log           *zap.SugaredLogger
+
+	subscribers sync.Map
 }
 
 func NewKeeperServer(cfg *config.Config, log *zap.SugaredLogger, userService service.IUserService, secretService service.ISecretService) *KeeperServer {
@@ -79,6 +83,7 @@ func (s *KeeperServer) Register() (*grpc.Server, error) {
 
 	pb.RegisterAuthServiceServer(srv, s)
 	pb.RegisterSecretsServiceServer(srv, s)
+	pb.RegisterNotificationServiceServer(srv, s)
 
 	return srv, nil
 }

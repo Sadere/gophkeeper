@@ -63,7 +63,7 @@ func (s *KeeperServer) SaveUserSecretV1(ctx context.Context, in *pb.SaveUserSecr
 	secret.UserID = userID
 
 	// Save secret
-	_, errSave := s.secretService.SaveSecret(ctx, in.MasterPassword, secret)
+	secretID, errSave := s.secretService.SaveSecret(ctx, in.MasterPassword, secret)
 
 	if errors.Is(errSave, model.ErrWrongSecretType) {
 		return nil, status.Error(codes.InvalidArgument, errSave.Error())
@@ -71,6 +71,22 @@ func (s *KeeperServer) SaveUserSecretV1(ctx context.Context, in *pb.SaveUserSecr
 
 	if errSave != nil {
 		return nil, status.Error(codes.Internal, errSave.Error())
+	}
+
+	// Send notifications
+	clientID, err := extractClientID(ctx)
+	if err == nil {
+		if secret.ID > 0 {
+			// Update notification
+			err = s.notifyClients(userID, clientID, secret.ID, true)
+		} else {
+			// New secret notification
+			err = s.notifyClients(userID, clientID, secretID, false)
+		}
+
+		if err != nil {
+			s.log.Error("failed to notify clients: ", err)
+		}
 	}
 
 	return &emptypb.Empty{}, nil

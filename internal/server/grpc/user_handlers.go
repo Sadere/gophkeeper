@@ -3,12 +3,14 @@ package grpc
 import (
 	"context"
 	"errors"
+	"strconv"
 	"time"
 
 	"github.com/Sadere/gophkeeper/internal/server/auth"
 	"github.com/Sadere/gophkeeper/internal/server/model"
 	"github.com/bufbuild/protovalidate-go"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/reflect/protoreflect"
 
@@ -111,4 +113,25 @@ func extractUserID(ctx context.Context) (uint64, error) {
 	}
 
 	return userID, nil
+}
+
+func extractClientID(ctx context.Context) (int32, error) {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return 0, errors.New("failed to get metadata")
+	}
+
+	values := md.Get(constants.ClientIDHeader)
+	if len(values) == 0 {
+		return 0, errors.New("missing client id metadata")
+	}
+
+	v := values[0]
+
+	id, err := strconv.Atoi(v)
+	if err != nil {
+		return 0, err
+	}
+
+	return int32(id), nil
 }
