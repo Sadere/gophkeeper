@@ -7,8 +7,11 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"math"
+	"math/rand/v2"
 	"os"
 	"path/filepath"
+	"sync"
 
 	"github.com/Sadere/gophkeeper/cert"
 	"github.com/Sadere/gophkeeper/internal/client/api"
@@ -23,6 +26,7 @@ import (
 	"github.com/Sadere/gophkeeper/pkg/constants"
 	"github.com/Sadere/gophkeeper/pkg/convert"
 	"github.com/Sadere/gophkeeper/pkg/model"
+
 	pb "github.com/Sadere/gophkeeper/pkg/proto/keeper/v1"
 )
 
@@ -30,9 +34,12 @@ type GRPCClient struct {
 	config         *config.Config
 	authClient     pb.AuthServiceClient
 	secretsClient  pb.SecretsServiceClient
+	notifyClient   pb.NotificationServiceClient
 	accessToken    string
 	masterPassword string
 	chunkSize      int
+	clientID       int32 // Unique ID to distinguish between multiple running clients for same user
+	previews       sync.Map
 }
 
 var _ api.IApiClient = &GRPCClient{}
@@ -43,6 +50,7 @@ func NewGRPCClient(cfg *config.Config) (*GRPCClient, error) {
 	newClient := GRPCClient{
 		config:    cfg,
 		chunkSize: constants.ChunkSize,
+		clientID:  int32(rand.IntN(math.MaxInt32)),
 	}
 
 	// Unary interceptors
@@ -50,14 +58,14 @@ func NewGRPCClient(cfg *config.Config) (*GRPCClient, error) {
 		opts,
 		grpc.WithChainUnaryInterceptor(
 			interceptor.Timeout(constants.DefaultClientTimeout),
-			interceptor.AddToken(&newClient.accessToken),
+			interceptor.AddAuth(&newClient.accessToken, newClient.clientID),
 		),
 	)
 
 	// Stream interceptor
 	opts = append(
 		opts,
-		grpc.WithStreamInterceptor(interceptor.AddTokenStream(&newClient.accessToken)),
+		grpc.WithStreamInterceptor(interceptor.AddAuthStream(&newClient.accessToken, newClient.clientID)),
 	)
 
 	// TLS
@@ -82,8 +90,6 @@ func NewGRPCClient(cfg *config.Config) (*GRPCClient, error) {
 		)
 	}
 
-	log.Printf("%+v %+v\n", opts, cfg.ServerAddress)
-
 	// create gRPC client
 	c, err := grpc.NewClient(
 		cfg.ServerAddress,
@@ -94,11 +100,9 @@ func NewGRPCClient(cfg *config.Config) (*GRPCClient, error) {
 	}
 
 	// register services
-	authClient := pb.NewAuthServiceClient(c)
-	secretsClient := pb.NewSecretsServiceClient(c)
-
-	newClient.authClient = authClient
-	newClient.secretsClient = secretsClient
+	newClient.authClient = pb.NewAuthServiceClient(c)
+	newClient.secretsClient = pb.NewSecretsServiceClient(c)
+	newClient.notifyClient = pb.NewNotificationServiceClient(c)
 
 	return &newClient, nil
 }
@@ -184,8 +188,19 @@ func (c *GRPCClient) LoadPreviews(ctx context.Context) (model.SecretPreviews, er
 		return nil, fmt.Errorf("failed to retrieve secrets: %w", err)
 	}
 
-	for _, preview := range response.Previews {
-		previews = append(previews, convert.ProtoToPreview(preview))
+	for _, pbPreview := range response.Previews {
+		preview := convert.ProtoToPreview(pbPreview)
+
+		// Set status
+		v, ok := c.previews.Load(preview.ID)
+		if ok {
+			status, ok := v.(model.SecretPreviewStatus)
+			if ok {
+				preview.Status = status
+			}
+		}
+
+		previews = append(previews, preview)
 	}
 
 	return previews, nil

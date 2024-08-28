@@ -2,13 +2,14 @@ package interceptor
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/Sadere/gophkeeper/pkg/constants"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )
 
-func AddToken(token *string) grpc.UnaryClientInterceptor {
+func AddAuth(token *string, clientID int32) grpc.UnaryClientInterceptor {
 	return func(ctx context.Context, method string, req, reply any, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
 		// pass request if token is empty
 		if len(*token) == 0 {
@@ -18,6 +19,7 @@ func AddToken(token *string) grpc.UnaryClientInterceptor {
 		// add access token to metadata
 		md := metadata.New(map[string]string{
 			constants.AccessTokenHeader: *token,
+			constants.ClientIDHeader:    strconv.Itoa(int(clientID)),
 		})
 
 		mdCtx := metadata.NewOutgoingContext(ctx, md)
@@ -25,7 +27,7 @@ func AddToken(token *string) grpc.UnaryClientInterceptor {
 	}
 }
 
-func AddTokenStream(token *string) grpc.StreamClientInterceptor {
+func AddAuthStream(token *string, clientID int32) grpc.StreamClientInterceptor {
 	return func(ctx context.Context, desc *grpc.StreamDesc, cc *grpc.ClientConn, method string, streamer grpc.Streamer, opts ...grpc.CallOption) (grpc.ClientStream, error) {
 		// pass request if token is empty
 		if len(*token) == 0 {
@@ -35,6 +37,7 @@ func AddTokenStream(token *string) grpc.StreamClientInterceptor {
 		// add access token to metadata
 		md := metadata.New(map[string]string{
 			constants.AccessTokenHeader: *token,
+			constants.ClientIDHeader:    strconv.Itoa(int(clientID)),
 		})
 
 		mdCtx := metadata.NewOutgoingContext(ctx, md)

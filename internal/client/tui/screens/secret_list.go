@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 
+	tuiMsg "github.com/Sadere/gophkeeper/internal/client/tui/msg"
 	"github.com/Sadere/gophkeeper/internal/client/tui/style"
 	"github.com/Sadere/gophkeeper/pkg/constants"
 	"github.com/Sadere/gophkeeper/pkg/model"
@@ -16,11 +17,11 @@ import (
 
 var errInvalidItem = "invalid item"
 
-type item struct {
+type secretListItem struct {
 	Preview *model.SecretPreview
 }
 
-func (i item) Title() string {
+func (i secretListItem) Title() string {
 	return fmt.Sprintf(
 		"%s %s %s",
 		i.Status(),
@@ -28,16 +29,16 @@ func (i item) Title() string {
 		i.Preview.Metadata,
 	)
 }
-func (i item) Description() string {
+func (i secretListItem) Description() string {
 	return fmt.Sprintf(
 		"Created: %v Updated: %v",
 		i.Preview.CreatedAt.Format(constants.TimeFormat),
 		i.Preview.UpdatedAt.Format(constants.TimeFormat),
 	)
 }
-func (i item) FilterValue() string { return i.Preview.Metadata }
+func (i secretListItem) FilterValue() string { return i.Preview.Metadata }
 
-func (i item) Icon() string {
+func (i secretListItem) Icon() string {
 	icon := "📃"
 
 	switch i.Preview.SType {
@@ -54,7 +55,7 @@ func (i item) Icon() string {
 	return icon
 }
 
-func (i item) Status() string {
+func (i secretListItem) Status() string {
 	status := ""
 
 	switch i.Preview.Status {
@@ -77,14 +78,26 @@ type MyDelegate struct {
 	list.DefaultDelegate
 }
 
-func (d MyDelegate) Render(w io.Writer, m list.Model, index int, item list.Item) {
+func (d MyDelegate) Render(w io.Writer, m list.Model, index int, listItem list.Item) {
 	d.DefaultDelegate.Styles.NormalDesc = style.BlurredStyle
 	d.DefaultDelegate.Styles.NormalTitle = style.BlurredStyle
 
 	d.DefaultDelegate.Styles.SelectedDesc = style.FocusedStyle
 	d.DefaultDelegate.Styles.SelectedTitle = style.FocusedStyle
 
-	d.DefaultDelegate.Render(w, m, index, item)
+	item, ok := listItem.(secretListItem)
+	if ok {
+		switch item.Preview.Status {
+		case model.SecretPreviewNew:
+			d.DefaultDelegate.Styles.NormalDesc = style.NewSecretStyle
+			d.DefaultDelegate.Styles.NormalTitle = style.NewSecretStyle
+		case model.SecretPreviewUpdated:
+			d.DefaultDelegate.Styles.NormalDesc = style.UpdatedSecretStyle
+			d.DefaultDelegate.Styles.NormalTitle = style.UpdatedSecretStyle
+		}
+	}
+
+	d.DefaultDelegate.Render(w, m, index, listItem)
 }
 
 func NewSecretListModel(state *State) *SecretListModel {
@@ -119,7 +132,7 @@ func NewSecretListModel(state *State) *SecretListModel {
 func PreviewsToItems(previews model.SecretPreviews) []list.Item {
 	var items []list.Item
 	for _, preview := range previews {
-		items = append(items, list.Item(item{
+		items = append(items, list.Item(secretListItem{
 			Preview: preview,
 		}))
 	}
@@ -142,7 +155,7 @@ func (m *SecretListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "a":
 			return m.AddNew()
 		case "enter":
-			selectedItem, ok := m.list.SelectedItem().(item)
+			selectedItem, ok := m.list.SelectedItem().(secretListItem)
 			if !ok {
 				m.errorMsg = errInvalidItem
 				return m, nil
@@ -150,6 +163,8 @@ func (m *SecretListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			return m.Edit(selectedItem.Preview)
 		}
+	case tuiMsg.ReloadSecretList:
+		return m.Reload()
 	}
 
 	var cmd tea.Cmd
@@ -175,6 +190,9 @@ func (m *SecretListModel) AddNew() (tea.Model, tea.Cmd) {
 }
 
 func (m *SecretListModel) Edit(preview *model.SecretPreview) (tea.Model, tea.Cmd) {
+	// Set as read
+	preview.Status = model.SecretPreviewRead
+
 	switch preview.SType {
 	case string(model.CredSecret):
 		credModel := NewCredentialModel(m.state, preview.ID)

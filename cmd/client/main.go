@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 	"os"
+	"os/signal"
+	"syscall"
 
 	tea "github.com/charmbracelet/bubbletea"
 
@@ -28,10 +30,27 @@ func main() {
 
 	defer f.Close()
 
+	// Catch quit signals
+	quit := make(chan os.Signal, 1)
+
 	p := tea.NewProgram(app.Root, tea.WithAltScreen())
 
-	_, err = p.Run()
-	if err != nil {
-		log.Fatal("failed to run bubbletea program: ", err)
-	}
+	// Run tea program
+	go func() {
+		_, err = p.Run()
+		if err != nil {
+			log.Fatal("failed to run bubbletea program: ", err)
+		}
+
+		quit <- syscall.SIGINT
+	}()
+
+	// Run notification monitor
+	go app.Client.Notifications(p)
+
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+
+	<-quit
+
+	log.Println("client shutdown ...")
 }

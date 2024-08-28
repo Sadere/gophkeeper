@@ -7,7 +7,8 @@ import (
 )
 
 type KeeperClient struct {
-	Root *screens.RootModel
+	Root   *screens.RootModel
+	Client *grpc.GRPCClient
 }
 
 func NewKeeperClient(cfg *config.Config) (*KeeperClient, error) {
@@ -21,6 +22,7 @@ func NewKeeperClient(cfg *config.Config) (*KeeperClient, error) {
 	root := screens.NewRootModel(state)
 
 	return &KeeperClient{
-		Root: root,
+		Root:   root,
+		Client: gClient,
 	}, nil
 }
