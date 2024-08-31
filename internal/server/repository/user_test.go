@@ -24,7 +24,7 @@ func NewMock(t *testing.T) (*sqlx.DB, sqlmock.Sqlmock) {
 	return dbx, mock
 }
 
-func TestCreateSuccess(t *testing.T) {
+func TestUserCreateSuccess(t *testing.T) {
 	db, mock := NewMock(t)
 	repo := NewPgUserRepository(db)
 
@@ -47,7 +47,7 @@ func TestCreateSuccess(t *testing.T) {
 	assert.Equal(t, expectedUserID, actualUserID)
 }
 
-func TestCreateError(t *testing.T) {
+func TestUserCreateError(t *testing.T) {
 	db, mock := NewMock(t)
 	repo := NewPgUserRepository(db)
 
