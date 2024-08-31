@@ -9,6 +9,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+//go:generate mockgen -source user.go -destination mocks/mock_user.go -package repository
 type UserRepository interface {
 	Create(ctx context.Context, user model.User) (uint64, error)
 	GetUserByID(ctx context.Context, ID uint64) (*model.User, error)
