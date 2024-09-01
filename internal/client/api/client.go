@@ -6,6 +6,7 @@ import (
 	"github.com/Sadere/gophkeeper/pkg/model"
 )
 
+//go:generate mockgen -source client.go -destination mocks/mock_client.go -package api
 type IApiClient interface {
 	Register(ctx context.Context, login string, password string) (string, error)
 	Login(ctx context.Context, login string, password string) (string, error)
