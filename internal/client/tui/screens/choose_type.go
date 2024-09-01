@@ -58,7 +58,7 @@ func (m *ChooseTypeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				textScreen := NewTextModel(m.state, 0)
 				return NewRootModel(m.state).SwitchScreen(textScreen)
 			case selectCard:
-				// Add text screen
+				// Add card screen
 				cardScreen := NewCardModel(m.state, 0)
 				return NewRootModel(m.state).SwitchScreen(cardScreen)
 			case selectBlob:
