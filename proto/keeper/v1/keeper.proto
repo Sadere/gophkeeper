@@ -6,7 +6,7 @@ import "buf/validate/validate.proto";
 
 option go_package = "github.com/Sadere/gophkeeper/pkg/keeper/v1";
 
-message LoginV1Request {
+message LoginRequestV1 {
   string login = 1 [
     (buf.validate.field).string.min_len = 5,
     (buf.validate.field).string.max_len = 100
@@ -17,11 +17,11 @@ message LoginV1Request {
   ];
 }
 
-message LoginV1Response {
+message LoginResponseV1 {
   string access_token = 1;
 }
 
-message RegisterV1Request {
+message RegisterRequestV1 {
   string login = 1 [
     (buf.validate.field).string.min_len = 5,
     (buf.validate.field).string.max_len = 100
@@ -32,11 +32,11 @@ message RegisterV1Request {
   ];
 }
 
-message RegisterV1Response {
+message RegisterResponseV1 {
   string access_token = 1;
 }
 
 service AuthService {
-  rpc LoginV1(LoginV1Request) returns (LoginV1Response);
-  rpc RegisterV1(RegisterV1Request) returns (RegisterV1Response);
+  rpc LoginV1(LoginRequestV1) returns (LoginResponseV1);
+  rpc RegisterV1(RegisterRequestV1) returns (RegisterResponseV1);
 }
