@@ -7,6 +7,7 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+//go:generate mockgen -source secret.go -destination mocks/mock_secret.go -package repository
 type SecretRepository interface {
 	GetUserSecrets(ctx context.Context, userID uint64) (model.Secrets, error)
 	Create(ctx context.Context, secret *model.Secret) (uint64, error)

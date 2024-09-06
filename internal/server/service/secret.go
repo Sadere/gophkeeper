@@ -35,12 +35,12 @@ func NewSecretService(secretRepo repository.SecretRepository) *SecretService {
 func (s *SecretService) GetUserSecrets(ctx context.Context, userID uint64) (pkgModel.Secrets, error) {
 	secrets, err := s.secretRepo.GetUserSecrets(ctx, userID)
 
-	if len(secrets) == 0 {
-		return nil, model.ErrNoSecrets
-	}
-
 	if err != nil {
 		return nil, err
+	}
+
+	if len(secrets) == 0 {
+		return nil, model.ErrNoSecrets
 	}
 
 	return secrets, nil
@@ -70,15 +70,15 @@ func (s *SecretService) SaveSecret(ctx context.Context, password string, secret 
 		payload, err = json.Marshal(secret.Blob)
 	}
 
+	if err != nil {
+		return 0, fmt.Errorf("failed to save secret data: %w", err)
+	}
+
 	// validate card number using Luhn's algo
 	if secret.SType == string(pkgModel.CardSecret) {
 		if ok := utils.CheckLuhn(secret.Card.Number); !ok {
 			return 0, model.ErrNumberInvaliod
 		}
-	}
-
-	if err != nil {
-		return 0, fmt.Errorf("failed to save secret data: %w", err)
 	}
 
 	// Encrypt secret data
