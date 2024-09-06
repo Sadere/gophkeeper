@@ -90,7 +90,7 @@ func (m TextModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			if m.cursor > textInputNum {
 				m.cursor = 1
-			} else if m.cursor < 0 {
+			} else if m.cursor <= 0 {
 				m.cursor = textInputNum
 			}
 
