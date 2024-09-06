@@ -1,0 +1,26 @@
+run
+----
+-- view:
+What would you like to do?␤
+␤
+> Go back␤
+         ␤
+  Add new credentials␤
+                     ␤
+  Add text␤
+          ␤
+  Upload file␤
+             ␤
+  Add card info␤
+               ␤
+
+# Go back
+run
+key enter
+----
+-- view:
+          ␤
+  No items␤
+          ␤
+No items. ␤
+          🛇
