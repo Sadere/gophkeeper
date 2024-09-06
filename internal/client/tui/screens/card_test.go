@@ -24,7 +24,7 @@ func TestCardModel_Submit(t *testing.T) {
 
 	m := NewCardModel(state, 0)
 
-	catwalk.RunModel(t, "testdata/card_submit_tests", m)
+	catwalk.RunModel(t, "testdata/card/submit_tests", m)
 }
 
 func TestCardModel_Edit(t *testing.T) {
@@ -53,5 +53,5 @@ func TestCardModel_Edit(t *testing.T) {
 
 	m := NewCardModel(state, secretID)
 
-	catwalk.RunModel(t, "testdata/card_edit_tests", m)
+	catwalk.RunModel(t, "testdata/card/edit_tests", m)
 }

@@ -37,7 +37,7 @@ func TestFileModel_Upload(t *testing.T) {
 		return nil
 	}
 
-	catwalk.RunModel(t, "testdata/file_upload_tests", m, catwalk.WithObserver("file", observer))
+	catwalk.RunModel(t, "testdata/file/upload_tests", m, catwalk.WithObserver("file", observer))
 }
 
 func TestFileModel_Download(t *testing.T) {
@@ -64,5 +64,5 @@ func TestFileModel_Download(t *testing.T) {
 
 	m := NewFileModel(state, secretID)
 
-	catwalk.RunModel(t, "testdata/file_download_tests", m)
+	catwalk.RunModel(t, "testdata/file/download_tests", m)
 }

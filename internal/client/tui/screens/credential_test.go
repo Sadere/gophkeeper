@@ -28,7 +28,7 @@ func TestCredModel_Submit(t *testing.T) {
 
 	m := NewCredentialModel(state, 0)
 
-	catwalk.RunModel(t, "testdata/credential_submit_tests", m)
+	catwalk.RunModel(t, "testdata/cred/submit_tests", m)
 }
 
 func TestCredModel_Edit(t *testing.T) {
@@ -55,5 +55,5 @@ func TestCredModel_Edit(t *testing.T) {
 
 	m := NewCredentialModel(state, secretID)
 
-	catwalk.RunModel(t, "testdata/credential_edit_tests", m)
+	catwalk.RunModel(t, "testdata/cred/edit_tests", m)
 }
