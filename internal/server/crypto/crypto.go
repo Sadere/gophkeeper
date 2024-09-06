@@ -76,7 +76,7 @@ func Decrypt(password string, encrypted []byte) ([]byte, error) {
 	nonce := encrypted[:GCM.NonceSize()]
 	encrypted = encrypted[GCM.NonceSize():]
 
-	// encrypt data
+	// decrypt data
 	decrypted, err := GCM.Open(nil, nonce, encrypted, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to decrypt: %w", err)
