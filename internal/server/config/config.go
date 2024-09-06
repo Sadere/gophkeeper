@@ -83,5 +83,6 @@ func defaultConfig() *Config {
 		Address:   DefaultAddress,
 		EnableTLS: DefaultTLS,
 		UploadDir: DefaultDir,
+		LogLevel:  "fatal",
 	}
 }
