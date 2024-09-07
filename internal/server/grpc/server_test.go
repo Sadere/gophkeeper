@@ -5,6 +5,7 @@ import (
 
 	"github.com/Sadere/gophkeeper/internal/server/config"
 	service "github.com/Sadere/gophkeeper/internal/server/service/mocks"
+	"github.com/Sadere/gophkeeper/internal/server/utils"
 	"github.com/golang/mock/gomock"
 )
 
@@ -19,9 +20,14 @@ func NewTestServer(t *testing.T) (*KeeperServer, *service.MockIUserService, *ser
 		SecretKey: "test_key",
 	}
 
+	log, err := utils.NewZapLogger("fatal")
+	if err != nil {
+		log.Fatal("failed to create logger ", err)
+	}
+
 	return NewKeeperServer(
 			cfg,
-			nil,
+			log,
 			userMock,
 			secretMock,
 		),
