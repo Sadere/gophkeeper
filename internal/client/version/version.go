@@ -1,3 +1,4 @@
+// Provides client version
 package version
 
 var (

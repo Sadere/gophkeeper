@@ -1,3 +1,4 @@
+// Provides different building blocks for TUI
 package components
 
 import (
@@ -10,6 +11,7 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 )
 
+// TUI component with multiple input models and submit button
 type InputGroup struct {
 	Inputs     []textinput.Model
 	InputNum   int

@@ -35,6 +35,7 @@ type errMsg struct {
 	msg string
 }
 
+// Model for uploading or downloading file from server
 type FileModel struct {
 	state         *State
 	secretID      uint64

@@ -7,6 +7,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+// Renders help string depending on root model's current model
 func RenderHelpForModel(model tea.Model) string {
 	help := "↑/↓: navigate • ctrl+c: quit"
 

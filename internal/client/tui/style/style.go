@@ -1,3 +1,4 @@
+// Provides lipgloss styles and render helpers for TUI app
 package style
 
 import "github.com/charmbracelet/lipgloss"
@@ -16,6 +17,7 @@ var (
 	BorderColor = lipgloss.Color("56")
 )
 
+// Render body in a box with border
 func RenderBox(body string) string {
 	borderBox := NoStyle.
 		Padding(0, 1).

@@ -15,16 +15,19 @@ type SecretRepository interface {
 	GetSecret(ctx context.Context, secretID uint64, userID uint64) (*model.Secret, error)
 }
 
+// Secret repository using PostgreSQL as storage
 type PgSecretRepository struct {
 	db *sqlx.DB
 }
 
+// Returns new postgresql secret repository
 func NewPgSecretRepository(db *sqlx.DB) *PgSecretRepository {
 	return &PgSecretRepository{
 		db: db,
 	}
 }
 
+// Returns list of secrets for given user ID
 func (r *PgSecretRepository) GetUserSecrets(ctx context.Context, userID uint64) (model.Secrets, error) {
 	var secrets model.Secrets
 
@@ -37,6 +40,7 @@ func (r *PgSecretRepository) GetUserSecrets(ctx context.Context, userID uint64) 
 	return secrets, nil
 }
 
+// Insert new secret entry
 func (r *PgSecretRepository) Create(ctx context.Context, secret *model.Secret) (uint64, error) {
 	var newSecretID uint64
 
@@ -60,6 +64,7 @@ func (r *PgSecretRepository) Create(ctx context.Context, secret *model.Secret) (
 	return newSecretID, nil
 }
 
+// Updates given secret
 func (r *PgSecretRepository) Update(ctx context.Context, secret *model.Secret) error {
 	_, err := r.db.ExecContext(ctx,
 		`UPDATE entries
@@ -80,6 +85,7 @@ func (r *PgSecretRepository) Update(ctx context.Context, secret *model.Secret) e
 	return err
 }
 
+// Returns secret with given ID and user ID
 func (r *PgSecretRepository) GetSecret(ctx context.Context, secretID uint64, userID uint64) (*model.Secret, error) {
 	var secret model.Secret
 

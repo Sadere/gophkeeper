@@ -18,6 +18,7 @@ const (
 	loginPassword
 )
 
+// Model for login form
 type LoginModel struct {
 	state      *State
 	inputGroup components.InputGroup

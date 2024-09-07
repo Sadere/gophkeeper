@@ -1,3 +1,4 @@
+// Provides functions necessary for encryption and decryption
 package crypto
 
 import (

@@ -1,3 +1,4 @@
+// Provides models used both by server and client
 package model
 
 import (

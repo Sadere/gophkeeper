@@ -5,6 +5,7 @@ import (
 	"google.golang.org/grpc"
 )
 
+// Stream auth interceptor checks provided in metadata token
 func StreamAuthentication(secretKey []byte) grpc.StreamServerInterceptor {
 	return func(srv any, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
 		// Check auth token and store user id in ctx

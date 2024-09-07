@@ -68,6 +68,7 @@ func (i secretListItem) Status() string {
 	return status
 }
 
+// Renders list of secret previews, shows type of secret, status of secret (new, updated, normal)
 type SecretListModel struct {
 	state    *State
 	list     list.Model

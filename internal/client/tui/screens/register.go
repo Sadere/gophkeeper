@@ -25,6 +25,7 @@ const (
 	registerConfirmPassword
 )
 
+// Model for register form
 type RegisterModel struct {
 	state      *State
 	inputGroup components.InputGroup

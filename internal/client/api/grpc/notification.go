@@ -11,6 +11,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+// Subscribes for notifications and sending signal to tea program to reload list
 func (c *GRPCClient) Notifications(p *tea.Program) {
 	var (
 		stream pb.NotificationService_SubscribeV1Client

@@ -1,3 +1,4 @@
+// Provides grpc server
 package grpc
 
 import (
@@ -18,6 +19,7 @@ import (
 	pb "github.com/Sadere/gophkeeper/pkg/proto/keeper/v1"
 )
 
+// gRPC server with all handlers implemented
 type KeeperServer struct {
 	pb.UnimplementedAuthServiceServer
 	pb.UnimplementedSecretsServiceServer
@@ -31,6 +33,7 @@ type KeeperServer struct {
 	subscribers sync.Map
 }
 
+// Returns instance of gRPC server
 func NewKeeperServer(cfg *config.Config, log *zap.SugaredLogger, userService service.IUserService, secretService service.ISecretService) *KeeperServer {
 	return &KeeperServer{
 		config: cfg,
@@ -41,6 +44,7 @@ func NewKeeperServer(cfg *config.Config, log *zap.SugaredLogger, userService ser
 	}
 }
 
+// Sets up interceptors for server and registers rpc services
 func (s *KeeperServer) Register() (*grpc.Server, error) {
 	var opts []grpc.ServerOption
 

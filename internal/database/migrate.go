@@ -12,6 +12,7 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
+// Performs DB migrations
 func MigrateUp(DSN string) error {
 	db, err := sql.Open("pgx", DSN)
 	if err != nil {
@@ -19,7 +20,7 @@ func MigrateUp(DSN string) error {
 	}
 	defer db.Close()
 
-	// Пинг
+	// Ping
 	err = db.Ping()
 	if err != nil {
 		return err

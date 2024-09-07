@@ -20,6 +20,7 @@ const (
 	credPassword
 )
 
+// Model for credentials adding/viewing/editing
 type CredentialModel struct {
 	state      *State
 	credID     uint64

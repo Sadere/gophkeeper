@@ -9,6 +9,7 @@ import (
 	"github.com/Sadere/gophkeeper/internal/client/tui/style"
 )
 
+// Model for multiple selection choices
 type SelectModel struct {
 	choices    []string
 	focusIndex int

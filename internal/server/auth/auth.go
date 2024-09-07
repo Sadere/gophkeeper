@@ -1,3 +1,4 @@
+// Provides auth functions, jwt vaildation and checks
 package auth
 
 import (

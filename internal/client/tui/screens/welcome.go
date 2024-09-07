@@ -12,6 +12,7 @@ const (
 	selectRegister
 )
 
+// First model that user sees, renders select for registering or signin in
 type WelcomeModel struct {
 	state       *State
 	selectModel components.SelectModel

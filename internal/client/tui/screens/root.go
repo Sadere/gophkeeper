@@ -1,3 +1,4 @@
+// Provides different TUI screens
 package screens
 
 import (
@@ -10,6 +11,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+// Main TUI model which renders header, footer and any tea model in between
 type RootModel struct {
 	state         *State
 	currentWindow tea.Model

@@ -1,3 +1,4 @@
+// Provides interface for API communication
 package api
 
 import (

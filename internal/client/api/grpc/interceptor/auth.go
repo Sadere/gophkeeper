@@ -1,3 +1,4 @@
+// Client gRPC interceptors
 package interceptor
 
 import (
@@ -9,6 +10,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
+// Unary gRPC interceptor which adds auth token to metadata
 func AddAuth(token *string, clientID int32) grpc.UnaryClientInterceptor {
 	return func(ctx context.Context, method string, req, reply any, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
 		// pass request if token is empty
@@ -27,6 +29,7 @@ func AddAuth(token *string, clientID int32) grpc.UnaryClientInterceptor {
 	}
 }
 
+// Stream gRPC interceptor which adds auth token to metadata
 func AddAuthStream(token *string, clientID int32) grpc.StreamClientInterceptor {
 	return func(ctx context.Context, desc *grpc.StreamDesc, cc *grpc.ClientConn, method string, streamer grpc.Streamer, opts ...grpc.CallOption) (grpc.ClientStream, error) {
 		// pass request if token is empty

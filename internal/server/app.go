@@ -1,3 +1,4 @@
+// Main package of server
 package server
 
 import (
@@ -18,11 +19,13 @@ import (
 	"github.com/Sadere/gophkeeper/internal/server/service"
 )
 
+// Main server app which creates and registers grpc server according to provided config
 type KeeperApp struct {
 	config *config.Config
 	log    *zap.SugaredLogger
 }
 
+// Returns instance of server app
 func NewApp(cfg *config.Config, log *zap.SugaredLogger) *KeeperApp {
 	return &KeeperApp{
 		config: cfg,
@@ -30,6 +33,7 @@ func NewApp(cfg *config.Config, log *zap.SugaredLogger) *KeeperApp {
 	}
 }
 
+// Start server
 func (a *KeeperApp) Start() error {
 	// Run migrations
 	if err := database.MigrateUp(a.config.PostgresDSN); err != nil {

@@ -1,3 +1,4 @@
+// Provides functions for storing data in database
 package repository
 
 import (
@@ -16,10 +17,12 @@ type UserRepository interface {
 	GetUserByLogin(ctx context.Context, login string) (*model.User, error)
 }
 
+// User repository using PostgreSQL
 type PgUserRepository struct {
 	db *sqlx.DB
 }
 
+// Returns new postgresql user repository
 func NewPgUserRepository(db *sqlx.DB) *PgUserRepository {
 	return &PgUserRepository{
 		db: db,

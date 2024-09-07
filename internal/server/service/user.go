@@ -12,15 +12,18 @@ import (
 	"github.com/Sadere/gophkeeper/internal/server/repository"
 )
 
+// User service interface
 type IUserService interface {
 	RegisterUser(ctx context.Context, login string, password string) (*model.User, error)
 	LoginUser(ctx context.Context, login string, password string) (*model.User, error)
 }
 
+// User service implementation
 type UserService struct {
 	userRepo repository.UserRepository
 }
 
+// Returns new user service
 func NewUserService(userRepo repository.UserRepository) *UserService {
 	return &UserService{
 		userRepo: userRepo,

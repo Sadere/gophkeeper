@@ -52,6 +52,7 @@ func authContext(secretKey []byte, ctx context.Context) (context.Context, error)
 	return ctx, nil
 }
 
+// Unary auth interceptor checks provided in metadata token
 func Authentication(secretKey []byte) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		// Allow login and register methods

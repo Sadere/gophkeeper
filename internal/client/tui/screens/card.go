@@ -28,6 +28,7 @@ const (
 	cardCvv
 )
 
+// Model for card adding/viewing/editing
 type CardModel struct {
 	state      *State
 	cardID     uint64

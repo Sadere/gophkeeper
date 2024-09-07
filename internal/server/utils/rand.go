@@ -2,6 +2,7 @@ package utils
 
 import "crypto/rand"
 
+// Returns slice of random bytes with given size
 func GenerateRandom(size int) ([]byte, error) {
 	// generating cryptographically strong random bytes in b
 	b := make([]byte, size)

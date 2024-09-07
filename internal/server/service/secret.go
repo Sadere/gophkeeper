@@ -1,3 +1,4 @@
+// Service layer of server
 package service
 
 import (
@@ -16,22 +17,26 @@ import (
 	pkgModel "github.com/Sadere/gophkeeper/pkg/model"
 )
 
+// Interface for secrets management
 type ISecretService interface {
 	GetUserSecrets(ctx context.Context, userID uint64) (pkgModel.Secrets, error)
 	SaveSecret(ctx context.Context, password string, secret *pkgModel.Secret) (uint64, error)
 	GetSecret(ctx context.Context, password string, ID uint64, userID uint64) (*pkgModel.Secret, error)
 }
 
+// Secret service implementation
 type SecretService struct {
 	secretRepo repository.SecretRepository
 }
 
+// Returns new secret service
 func NewSecretService(secretRepo repository.SecretRepository) *SecretService {
 	return &SecretService{
 		secretRepo: secretRepo,
 	}
 }
 
+// Returns list of secrets belonging to given user ID
 func (s *SecretService) GetUserSecrets(ctx context.Context, userID uint64) (pkgModel.Secrets, error) {
 	secrets, err := s.secretRepo.GetUserSecrets(ctx, userID)
 

@@ -1,3 +1,4 @@
+// Provides functions for converting between protobuf models and regular models
 package convert
 
 import (
@@ -7,6 +8,7 @@ import (
 	pb "github.com/Sadere/gophkeeper/pkg/proto/keeper/v1"
 )
 
+// Returns corresponding secret type
 func ProtoToType(pbType pb.SecretType) model.SecretType {
 	switch pbType {
 	case pb.SecretType_SECRET_TYPE_CREDENTIAL:
@@ -22,6 +24,7 @@ func ProtoToType(pbType pb.SecretType) model.SecretType {
 	}
 }
 
+// Returns corresponding protobuf secret type
 func TypeToProto(sType string) pb.SecretType {
 	switch sType {
 	case string(model.CredSecret):
@@ -37,6 +40,7 @@ func TypeToProto(sType string) pb.SecretType {
 	}
 }
 
+// Converts secret model to protobuf counterpart
 func SecretToProto(secret *model.Secret) *pb.Secret {
 	pbSecret := &pb.Secret{
 		Id:        secret.ID,
@@ -82,6 +86,7 @@ func SecretToProto(secret *model.Secret) *pb.Secret {
 	return pbSecret
 }
 
+// Converts protobuf model to regular model
 func ProtoToSecret(pbSecret *pb.Secret) *model.Secret {
 	secret := &model.Secret{
 		ID:        pbSecret.Id,
@@ -123,6 +128,7 @@ func ProtoToSecret(pbSecret *pb.Secret) *model.Secret {
 	return secret
 }
 
+// Converts protobuf secret preview to regular secret preview
 func ProtoToPreview(pbPreview *pb.SecretPreview) *model.SecretPreview {
 	return &model.SecretPreview{
 		ID:        pbPreview.Id,
@@ -133,6 +139,7 @@ func ProtoToPreview(pbPreview *pb.SecretPreview) *model.SecretPreview {
 	}
 }
 
+// Converts secret preview to protobuf struct
 func PreviewToProto(preview *model.SecretPreview) *pb.SecretPreview {
 	return &pb.SecretPreview{
 		Id:        preview.ID,

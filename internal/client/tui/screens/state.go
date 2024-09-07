@@ -6,6 +6,7 @@ import (
 	"github.com/Sadere/gophkeeper/internal/client/api"
 )
 
+// Current client state, provides API client instance, stores access token
 type State struct {
 	client      api.IApiClient
 	accessToken string

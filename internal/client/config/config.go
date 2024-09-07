@@ -1,3 +1,4 @@
+// Client config package
 package config
 
 import (
@@ -6,6 +7,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
+// Client config struct
 type Config struct {
 	ServerAddress string
 	DownloadPath  string
@@ -18,6 +20,7 @@ const (
 	DefaultDownloadPath  = "./download/"
 )
 
+// Parses cmd line args and returns config struct
 func NewConfig(args []string) (*Config, error) {
 	cfg := defaultConfig()
 

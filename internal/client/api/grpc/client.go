@@ -1,3 +1,4 @@
+// Client API implementation using gRPC
 package grpc
 
 import (

@@ -2,6 +2,7 @@ package utils
 
 import "strconv"
 
+// Check given number according to Luhn's algo
 func CheckLuhn(number string) bool {
 	sum := 0
 

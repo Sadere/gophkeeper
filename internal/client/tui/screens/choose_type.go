@@ -15,6 +15,7 @@ const (
 	selectCard
 )
 
+// Model which renders selection list of different commands
 type ChooseTypeModel struct {
 	state       *State
 	selectModel components.SelectModel

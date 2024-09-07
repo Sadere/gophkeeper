@@ -23,6 +23,7 @@ const (
 	textContent
 )
 
+// Model for text secret adding/viewing/editing
 type TextModel struct {
 	state         *State
 	textID        uint64

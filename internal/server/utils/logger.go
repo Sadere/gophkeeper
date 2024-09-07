@@ -1,7 +1,9 @@
+// Useful utility functions for server
 package utils
 
 import "go.uber.org/zap"
 
+// Returns new instance of zap sugar logger
 func NewZapLogger(level string) (*zap.SugaredLogger, error) {
 	// parse string log level to zap.AtomicLevel
 	lvl, err := zap.ParseAtomicLevel(level)

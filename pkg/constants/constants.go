@@ -1,3 +1,4 @@
+// Holds useful app wide constants
 package constants
 
 import "time"
