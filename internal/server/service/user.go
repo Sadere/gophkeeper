@@ -12,6 +12,8 @@ import (
 	"github.com/Sadere/gophkeeper/internal/server/repository"
 )
 
+//go:generate mockgen -source user.go -destination mocks/mock_user.go -package service
+
 // User service interface
 type IUserService interface {
 	RegisterUser(ctx context.Context, login string, password string) (*model.User, error)

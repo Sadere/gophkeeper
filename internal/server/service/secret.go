@@ -17,6 +17,8 @@ import (
 	pkgModel "github.com/Sadere/gophkeeper/pkg/model"
 )
 
+//go:generate mockgen -source secret.go -destination mocks/mock_secret.go -package service
+
 // Interface for secrets management
 type ISecretService interface {
 	GetUserSecrets(ctx context.Context, userID uint64) (pkgModel.Secrets, error)
