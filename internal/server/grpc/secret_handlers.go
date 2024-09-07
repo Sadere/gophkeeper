@@ -15,8 +15,8 @@ import (
 	pb "github.com/Sadere/gophkeeper/pkg/proto/keeper/v1"
 )
 
-func (s *KeeperServer) SecretPreviewsV1(ctx context.Context, in *emptypb.Empty) (*pb.SecretPreviewsV1Response, error) {
-	var response pb.SecretPreviewsV1Response
+func (s *KeeperServer) SecretPreviewsV1(ctx context.Context, in *emptypb.Empty) (*pb.SecretPreviewsResponseV1, error) {
+	var response pb.SecretPreviewsResponseV1
 
 	userID, err := extractUserID(ctx)
 	if err != nil {
@@ -48,7 +48,7 @@ func (s *KeeperServer) SecretPreviewsV1(ctx context.Context, in *emptypb.Empty) 
 }
 
 // Saves new secret or updates existing one
-func (s *KeeperServer) SaveUserSecretV1(ctx context.Context, in *pb.SaveUserSecretV1Request) (*emptypb.Empty, error) {
+func (s *KeeperServer) SaveUserSecretV1(ctx context.Context, in *pb.SaveUserSecretRequestV1) (*emptypb.Empty, error) {
 	userID, err := extractUserID(ctx)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
@@ -92,8 +92,8 @@ func (s *KeeperServer) SaveUserSecretV1(ctx context.Context, in *pb.SaveUserSecr
 	return &emptypb.Empty{}, nil
 }
 
-func (s *KeeperServer) GetUserSecretV1(ctx context.Context, in *pb.GetUserSecretV1Request) (*pb.GetUserSecretV1Response, error) {
-	var response pb.GetUserSecretV1Response
+func (s *KeeperServer) GetUserSecretV1(ctx context.Context, in *pb.GetUserSecretRequestV1) (*pb.GetUserSecretResponseV1, error) {
+	var response pb.GetUserSecretResponseV1
 
 	userID, err := extractUserID(ctx)
 	if err != nil {

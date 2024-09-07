@@ -110,7 +110,7 @@ func (s *KeeperServer) UploadFileV1(stream pb.SecretsService_UploadFileV1Server)
 	return stream.SendAndClose(&emptypb.Empty{})
 }
 
-func (s *KeeperServer) DownloadFileV1(in *pb.DownloadFileV1Request, srv pb.SecretsService_DownloadFileV1Server) error {
+func (s *KeeperServer) DownloadFileV1(in *pb.DownloadFileRequestV1, srv pb.SecretsService_DownloadFileV1Server) error {
 	ctx := srv.Context()
 
 	userID, err := extractUserID(ctx)
@@ -153,7 +153,7 @@ func (s *KeeperServer) DownloadFileV1(in *pb.DownloadFileV1Request, srv pb.Secre
 
 		chunk := buf[:n]
 
-		resp := &pb.DownloadFileV1Response{
+		resp := &pb.DownloadFileResponseV1{
 			Chunk: chunk,
 		}
 

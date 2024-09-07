@@ -84,7 +84,7 @@ func (s *KeeperServer) notifyClients(userID uint64, clientID int32, ID uint64, u
 			continue
 		}
 
-		resp := &pb.SubscribeV1Response{
+		resp := &pb.SubscribeResponseV1{
 			Id:      ID,
 			Updated: updated,
 		}

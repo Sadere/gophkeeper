@@ -27,7 +27,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type NotificationServiceClient interface {
-	SubscribeV1(ctx context.Context, in *SubscribeV1Request, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SubscribeV1Response], error)
+	SubscribeV1(ctx context.Context, in *SubscribeV1Request, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SubscribeResponseV1], error)
 }
 
 type notificationServiceClient struct {
@@ -38,13 +38,13 @@ func NewNotificationServiceClient(cc grpc.ClientConnInterface) NotificationServi
 	return &notificationServiceClient{cc}
 }
 
-func (c *notificationServiceClient) SubscribeV1(ctx context.Context, in *SubscribeV1Request, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SubscribeV1Response], error) {
+func (c *notificationServiceClient) SubscribeV1(ctx context.Context, in *SubscribeV1Request, opts ...grpc.CallOption) (grpc.ServerStreamingClient[SubscribeResponseV1], error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	stream, err := c.cc.NewStream(ctx, &NotificationService_ServiceDesc.Streams[0], NotificationService_SubscribeV1_FullMethodName, cOpts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &grpc.GenericClientStream[SubscribeV1Request, SubscribeV1Response]{ClientStream: stream}
+	x := &grpc.GenericClientStream[SubscribeV1Request, SubscribeResponseV1]{ClientStream: stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -55,13 +55,13 @@ func (c *notificationServiceClient) SubscribeV1(ctx context.Context, in *Subscri
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type NotificationService_SubscribeV1Client = grpc.ServerStreamingClient[SubscribeV1Response]
+type NotificationService_SubscribeV1Client = grpc.ServerStreamingClient[SubscribeResponseV1]
 
 // NotificationServiceServer is the server API for NotificationService service.
 // All implementations must embed UnimplementedNotificationServiceServer
 // for forward compatibility.
 type NotificationServiceServer interface {
-	SubscribeV1(*SubscribeV1Request, grpc.ServerStreamingServer[SubscribeV1Response]) error
+	SubscribeV1(*SubscribeV1Request, grpc.ServerStreamingServer[SubscribeResponseV1]) error
 	mustEmbedUnimplementedNotificationServiceServer()
 }
 
@@ -72,7 +72,7 @@ type NotificationServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedNotificationServiceServer struct{}
 
-func (UnimplementedNotificationServiceServer) SubscribeV1(*SubscribeV1Request, grpc.ServerStreamingServer[SubscribeV1Response]) error {
+func (UnimplementedNotificationServiceServer) SubscribeV1(*SubscribeV1Request, grpc.ServerStreamingServer[SubscribeResponseV1]) error {
 	return status.Errorf(codes.Unimplemented, "method SubscribeV1 not implemented")
 }
 func (UnimplementedNotificationServiceServer) mustEmbedUnimplementedNotificationServiceServer() {}
@@ -101,11 +101,11 @@ func _NotificationService_SubscribeV1_Handler(srv interface{}, stream grpc.Serve
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(NotificationServiceServer).SubscribeV1(m, &grpc.GenericServerStream[SubscribeV1Request, SubscribeV1Response]{ServerStream: stream})
+	return srv.(NotificationServiceServer).SubscribeV1(m, &grpc.GenericServerStream[SubscribeV1Request, SubscribeResponseV1]{ServerStream: stream})
 }
 
 // This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
-type NotificationService_SubscribeV1Server = grpc.ServerStreamingServer[SubscribeV1Response]
+type NotificationService_SubscribeV1Server = grpc.ServerStreamingServer[SubscribeResponseV1]
 
 // NotificationService_ServiceDesc is the grpc.ServiceDesc for NotificationService service.
 // It's only intended for direct use with grpc.RegisterService,

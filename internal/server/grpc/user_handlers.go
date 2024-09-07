@@ -18,8 +18,8 @@ import (
 	pb "github.com/Sadere/gophkeeper/pkg/proto/keeper/v1"
 )
 
-func (s *KeeperServer) RegisterV1(ctx context.Context, in *pb.RegisterV1Request) (*pb.RegisterV1Response, error) {
-	var response pb.RegisterV1Response
+func (s *KeeperServer) RegisterV1(ctx context.Context, in *pb.RegisterRequestV1) (*pb.RegisterResponseV1, error) {
+	var response pb.RegisterResponseV1
 
 	// Validate request
 	if err := validateRequest(in); err != nil {
@@ -50,8 +50,8 @@ func (s *KeeperServer) RegisterV1(ctx context.Context, in *pb.RegisterV1Request)
 	return &response, nil
 }
 
-func (s *KeeperServer) LoginV1(ctx context.Context, in *pb.LoginV1Request) (*pb.LoginV1Response, error) {
-	var response pb.LoginV1Response
+func (s *KeeperServer) LoginV1(ctx context.Context, in *pb.LoginRequestV1) (*pb.LoginResponseV1, error) {
+	var response pb.LoginResponseV1
 
 	// Validate request
 	if err := validateRequest(in); err != nil {

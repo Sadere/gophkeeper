@@ -151,7 +151,7 @@ func loadTLSConfig(caCertFile, clientCertFile, clientKeyFile string) (credential
 }
 
 func (c *GRPCClient) Login(ctx context.Context, login string, password string) (string, error) {
-	req := &pb.LoginV1Request{
+	req := &pb.LoginRequestV1{
 		Login:    login,
 		Password: password,
 	}
@@ -168,7 +168,7 @@ func (c *GRPCClient) Login(ctx context.Context, login string, password string) (
 }
 
 func (c *GRPCClient) Register(ctx context.Context, login string, password string) (string, error) {
-	req := &pb.RegisterV1Request{
+	req := &pb.RegisterRequestV1{
 		Login:    login,
 		Password: password,
 	}
@@ -217,7 +217,7 @@ func (c *GRPCClient) LoadPreviews(ctx context.Context) (model.SecretPreviews, er
 
 func (c *GRPCClient) LoadSecret(ctx context.Context, ID uint64) (*model.Secret, error) {
 	// form gRPC request
-	request := &pb.GetUserSecretV1Request{
+	request := &pb.GetUserSecretRequestV1{
 		MasterPassword: c.masterPassword,
 		Id:             ID,
 	}
@@ -235,7 +235,7 @@ func (c *GRPCClient) LoadSecret(ctx context.Context, ID uint64) (*model.Secret, 
 
 func (c *GRPCClient) SaveCredential(ctx context.Context, ID uint64, metadata, login, password string) error {
 	// form gRPC request
-	request := &pb.SaveUserSecretV1Request{
+	request := &pb.SaveUserSecretRequestV1{
 		MasterPassword: c.masterPassword,
 		Secret: &pb.Secret{
 			Id:        ID,
@@ -260,7 +260,7 @@ func (c *GRPCClient) SaveCredential(ctx context.Context, ID uint64, metadata, lo
 
 func (c *GRPCClient) SaveText(ctx context.Context, ID uint64, metadata, text string) error {
 	// form gRPC request
-	request := &pb.SaveUserSecretV1Request{
+	request := &pb.SaveUserSecretRequestV1{
 		MasterPassword: c.masterPassword,
 		Secret: &pb.Secret{
 			Id:        ID,
@@ -284,7 +284,7 @@ func (c *GRPCClient) SaveText(ctx context.Context, ID uint64, metadata, text str
 
 func (c *GRPCClient) SaveCard(ctx context.Context, ID uint64, metadata, number string, expMonth, expYear, cvv uint32) error {
 	// form gRPC request
-	request := &pb.SaveUserSecretV1Request{
+	request := &pb.SaveUserSecretRequestV1{
 		MasterPassword: c.masterPassword,
 		Secret: &pb.Secret{
 			Id:        ID,
@@ -348,7 +348,7 @@ func (c *GRPCClient) UploadFile(ctx context.Context, metadata, filePath string) 
 		chunk := buf[:n]
 
 		// Send chunk
-		err = stream.Send(&pb.UploadFileV1Request{
+		err = stream.Send(&pb.UploadFileRequestV1{
 			Metadata:       metadata,
 			FileName:       fileName,
 			MasterPassword: c.masterPassword,
@@ -379,7 +379,7 @@ func (c *GRPCClient) DownloadFile(ctx context.Context, ID uint64, fileName strin
 		}
 	}()
 
-	req := &pb.DownloadFileV1Request{
+	req := &pb.DownloadFileRequestV1{
 		Id:             ID,
 		MasterPassword: c.masterPassword,
 	}

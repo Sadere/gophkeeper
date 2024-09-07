@@ -584,7 +584,7 @@ func (x *SecretPreview) GetType() SecretType {
 	return SecretType_SECRET_TYPE_UNSPECIFIED
 }
 
-type SecretPreviewsV1Response struct {
+type SecretPreviewsResponseV1 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -592,8 +592,8 @@ type SecretPreviewsV1Response struct {
 	Previews []*SecretPreview `protobuf:"bytes,1,rep,name=previews,proto3" json:"previews,omitempty"`
 }
 
-func (x *SecretPreviewsV1Response) Reset() {
-	*x = SecretPreviewsV1Response{}
+func (x *SecretPreviewsResponseV1) Reset() {
+	*x = SecretPreviewsResponseV1{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_keeper_v1_secrets_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -601,13 +601,13 @@ func (x *SecretPreviewsV1Response) Reset() {
 	}
 }
 
-func (x *SecretPreviewsV1Response) String() string {
+func (x *SecretPreviewsResponseV1) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SecretPreviewsV1Response) ProtoMessage() {}
+func (*SecretPreviewsResponseV1) ProtoMessage() {}
 
-func (x *SecretPreviewsV1Response) ProtoReflect() protoreflect.Message {
+func (x *SecretPreviewsResponseV1) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_keeper_v1_secrets_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -619,19 +619,19 @@ func (x *SecretPreviewsV1Response) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SecretPreviewsV1Response.ProtoReflect.Descriptor instead.
-func (*SecretPreviewsV1Response) Descriptor() ([]byte, []int) {
+// Deprecated: Use SecretPreviewsResponseV1.ProtoReflect.Descriptor instead.
+func (*SecretPreviewsResponseV1) Descriptor() ([]byte, []int) {
 	return file_proto_keeper_v1_secrets_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *SecretPreviewsV1Response) GetPreviews() []*SecretPreview {
+func (x *SecretPreviewsResponseV1) GetPreviews() []*SecretPreview {
 	if x != nil {
 		return x.Previews
 	}
 	return nil
 }
 
-type SaveUserSecretV1Request struct {
+type SaveUserSecretRequestV1 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -640,8 +640,8 @@ type SaveUserSecretV1Request struct {
 	Secret         *Secret `protobuf:"bytes,2,opt,name=secret,proto3" json:"secret,omitempty"`
 }
 
-func (x *SaveUserSecretV1Request) Reset() {
-	*x = SaveUserSecretV1Request{}
+func (x *SaveUserSecretRequestV1) Reset() {
+	*x = SaveUserSecretRequestV1{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_keeper_v1_secrets_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -649,13 +649,13 @@ func (x *SaveUserSecretV1Request) Reset() {
 	}
 }
 
-func (x *SaveUserSecretV1Request) String() string {
+func (x *SaveUserSecretRequestV1) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SaveUserSecretV1Request) ProtoMessage() {}
+func (*SaveUserSecretRequestV1) ProtoMessage() {}
 
-func (x *SaveUserSecretV1Request) ProtoReflect() protoreflect.Message {
+func (x *SaveUserSecretRequestV1) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_keeper_v1_secrets_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -667,26 +667,26 @@ func (x *SaveUserSecretV1Request) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SaveUserSecretV1Request.ProtoReflect.Descriptor instead.
-func (*SaveUserSecretV1Request) Descriptor() ([]byte, []int) {
+// Deprecated: Use SaveUserSecretRequestV1.ProtoReflect.Descriptor instead.
+func (*SaveUserSecretRequestV1) Descriptor() ([]byte, []int) {
 	return file_proto_keeper_v1_secrets_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *SaveUserSecretV1Request) GetMasterPassword() string {
+func (x *SaveUserSecretRequestV1) GetMasterPassword() string {
 	if x != nil {
 		return x.MasterPassword
 	}
 	return ""
 }
 
-func (x *SaveUserSecretV1Request) GetSecret() *Secret {
+func (x *SaveUserSecretRequestV1) GetSecret() *Secret {
 	if x != nil {
 		return x.Secret
 	}
 	return nil
 }
 
-type GetUserSecretV1Request struct {
+type GetUserSecretRequestV1 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -695,8 +695,8 @@ type GetUserSecretV1Request struct {
 	Id             uint64 `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
 }
 
-func (x *GetUserSecretV1Request) Reset() {
-	*x = GetUserSecretV1Request{}
+func (x *GetUserSecretRequestV1) Reset() {
+	*x = GetUserSecretRequestV1{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_keeper_v1_secrets_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -704,13 +704,13 @@ func (x *GetUserSecretV1Request) Reset() {
 	}
 }
 
-func (x *GetUserSecretV1Request) String() string {
+func (x *GetUserSecretRequestV1) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUserSecretV1Request) ProtoMessage() {}
+func (*GetUserSecretRequestV1) ProtoMessage() {}
 
-func (x *GetUserSecretV1Request) ProtoReflect() protoreflect.Message {
+func (x *GetUserSecretRequestV1) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_keeper_v1_secrets_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -722,26 +722,26 @@ func (x *GetUserSecretV1Request) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUserSecretV1Request.ProtoReflect.Descriptor instead.
-func (*GetUserSecretV1Request) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserSecretRequestV1.ProtoReflect.Descriptor instead.
+func (*GetUserSecretRequestV1) Descriptor() ([]byte, []int) {
 	return file_proto_keeper_v1_secrets_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *GetUserSecretV1Request) GetMasterPassword() string {
+func (x *GetUserSecretRequestV1) GetMasterPassword() string {
 	if x != nil {
 		return x.MasterPassword
 	}
 	return ""
 }
 
-func (x *GetUserSecretV1Request) GetId() uint64 {
+func (x *GetUserSecretRequestV1) GetId() uint64 {
 	if x != nil {
 		return x.Id
 	}
 	return 0
 }
 
-type GetUserSecretV1Response struct {
+type GetUserSecretResponseV1 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -749,8 +749,8 @@ type GetUserSecretV1Response struct {
 	Secret *Secret `protobuf:"bytes,1,opt,name=secret,proto3" json:"secret,omitempty"`
 }
 
-func (x *GetUserSecretV1Response) Reset() {
-	*x = GetUserSecretV1Response{}
+func (x *GetUserSecretResponseV1) Reset() {
+	*x = GetUserSecretResponseV1{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_keeper_v1_secrets_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -758,13 +758,13 @@ func (x *GetUserSecretV1Response) Reset() {
 	}
 }
 
-func (x *GetUserSecretV1Response) String() string {
+func (x *GetUserSecretResponseV1) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUserSecretV1Response) ProtoMessage() {}
+func (*GetUserSecretResponseV1) ProtoMessage() {}
 
-func (x *GetUserSecretV1Response) ProtoReflect() protoreflect.Message {
+func (x *GetUserSecretResponseV1) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_keeper_v1_secrets_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -776,19 +776,19 @@ func (x *GetUserSecretV1Response) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUserSecretV1Response.ProtoReflect.Descriptor instead.
-func (*GetUserSecretV1Response) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserSecretResponseV1.ProtoReflect.Descriptor instead.
+func (*GetUserSecretResponseV1) Descriptor() ([]byte, []int) {
 	return file_proto_keeper_v1_secrets_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *GetUserSecretV1Response) GetSecret() *Secret {
+func (x *GetUserSecretResponseV1) GetSecret() *Secret {
 	if x != nil {
 		return x.Secret
 	}
 	return nil
 }
 
-type UploadFileV1Request struct {
+type UploadFileRequestV1 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -799,8 +799,8 @@ type UploadFileV1Request struct {
 	Chunk          []byte `protobuf:"bytes,4,opt,name=chunk,proto3" json:"chunk,omitempty"`
 }
 
-func (x *UploadFileV1Request) Reset() {
-	*x = UploadFileV1Request{}
+func (x *UploadFileRequestV1) Reset() {
+	*x = UploadFileRequestV1{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_keeper_v1_secrets_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -808,13 +808,13 @@ func (x *UploadFileV1Request) Reset() {
 	}
 }
 
-func (x *UploadFileV1Request) String() string {
+func (x *UploadFileRequestV1) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UploadFileV1Request) ProtoMessage() {}
+func (*UploadFileRequestV1) ProtoMessage() {}
 
-func (x *UploadFileV1Request) ProtoReflect() protoreflect.Message {
+func (x *UploadFileRequestV1) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_keeper_v1_secrets_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -826,40 +826,40 @@ func (x *UploadFileV1Request) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UploadFileV1Request.ProtoReflect.Descriptor instead.
-func (*UploadFileV1Request) Descriptor() ([]byte, []int) {
+// Deprecated: Use UploadFileRequestV1.ProtoReflect.Descriptor instead.
+func (*UploadFileRequestV1) Descriptor() ([]byte, []int) {
 	return file_proto_keeper_v1_secrets_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *UploadFileV1Request) GetMetadata() string {
+func (x *UploadFileRequestV1) GetMetadata() string {
 	if x != nil {
 		return x.Metadata
 	}
 	return ""
 }
 
-func (x *UploadFileV1Request) GetFileName() string {
+func (x *UploadFileRequestV1) GetFileName() string {
 	if x != nil {
 		return x.FileName
 	}
 	return ""
 }
 
-func (x *UploadFileV1Request) GetMasterPassword() string {
+func (x *UploadFileRequestV1) GetMasterPassword() string {
 	if x != nil {
 		return x.MasterPassword
 	}
 	return ""
 }
 
-func (x *UploadFileV1Request) GetChunk() []byte {
+func (x *UploadFileRequestV1) GetChunk() []byte {
 	if x != nil {
 		return x.Chunk
 	}
 	return nil
 }
 
-type DownloadFileV1Request struct {
+type DownloadFileRequestV1 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -868,8 +868,8 @@ type DownloadFileV1Request struct {
 	Id             uint64 `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
 }
 
-func (x *DownloadFileV1Request) Reset() {
-	*x = DownloadFileV1Request{}
+func (x *DownloadFileRequestV1) Reset() {
+	*x = DownloadFileRequestV1{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_keeper_v1_secrets_proto_msgTypes[11]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -877,13 +877,13 @@ func (x *DownloadFileV1Request) Reset() {
 	}
 }
 
-func (x *DownloadFileV1Request) String() string {
+func (x *DownloadFileRequestV1) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DownloadFileV1Request) ProtoMessage() {}
+func (*DownloadFileRequestV1) ProtoMessage() {}
 
-func (x *DownloadFileV1Request) ProtoReflect() protoreflect.Message {
+func (x *DownloadFileRequestV1) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_keeper_v1_secrets_proto_msgTypes[11]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -895,26 +895,26 @@ func (x *DownloadFileV1Request) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DownloadFileV1Request.ProtoReflect.Descriptor instead.
-func (*DownloadFileV1Request) Descriptor() ([]byte, []int) {
+// Deprecated: Use DownloadFileRequestV1.ProtoReflect.Descriptor instead.
+func (*DownloadFileRequestV1) Descriptor() ([]byte, []int) {
 	return file_proto_keeper_v1_secrets_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *DownloadFileV1Request) GetMasterPassword() string {
+func (x *DownloadFileRequestV1) GetMasterPassword() string {
 	if x != nil {
 		return x.MasterPassword
 	}
 	return ""
 }
 
-func (x *DownloadFileV1Request) GetId() uint64 {
+func (x *DownloadFileRequestV1) GetId() uint64 {
 	if x != nil {
 		return x.Id
 	}
 	return 0
 }
 
-type DownloadFileV1Response struct {
+type DownloadFileResponseV1 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -922,8 +922,8 @@ type DownloadFileV1Response struct {
 	Chunk []byte `protobuf:"bytes,1,opt,name=chunk,proto3" json:"chunk,omitempty"`
 }
 
-func (x *DownloadFileV1Response) Reset() {
-	*x = DownloadFileV1Response{}
+func (x *DownloadFileResponseV1) Reset() {
+	*x = DownloadFileResponseV1{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_keeper_v1_secrets_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -931,13 +931,13 @@ func (x *DownloadFileV1Response) Reset() {
 	}
 }
 
-func (x *DownloadFileV1Response) String() string {
+func (x *DownloadFileResponseV1) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DownloadFileV1Response) ProtoMessage() {}
+func (*DownloadFileResponseV1) ProtoMessage() {}
 
-func (x *DownloadFileV1Response) ProtoReflect() protoreflect.Message {
+func (x *DownloadFileResponseV1) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_keeper_v1_secrets_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -949,12 +949,12 @@ func (x *DownloadFileV1Response) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DownloadFileV1Response.ProtoReflect.Descriptor instead.
-func (*DownloadFileV1Response) Descriptor() ([]byte, []int) {
+// Deprecated: Use DownloadFileResponseV1.ProtoReflect.Descriptor instead.
+func (*DownloadFileResponseV1) Descriptor() ([]byte, []int) {
 	return file_proto_keeper_v1_secrets_proto_rawDescGZIP(), []int{12}
 }
 
-func (x *DownloadFileV1Response) GetChunk() []byte {
+func (x *DownloadFileResponseV1) GetChunk() []byte {
 	if x != nil {
 		return x.Chunk
 	}
@@ -1036,13 +1036,13 @@ var file_proto_keeper_v1_secrets_proto_rawDesc = []byte{
 	0x18, 0x05, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x1b, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x6b,
 	0x65, 0x65, 0x70, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x54,
 	0x79, 0x70, 0x65, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x22, 0x56, 0x0a, 0x18, 0x53, 0x65, 0x63,
-	0x72, 0x65, 0x74, 0x50, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77, 0x73, 0x56, 0x31, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x3a, 0x0a, 0x08, 0x70, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77,
+	0x72, 0x65, 0x74, 0x50, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x56, 0x31, 0x12, 0x3a, 0x0a, 0x08, 0x70, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77,
 	0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1e, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e,
 	0x6b, 0x65, 0x65, 0x70, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74,
 	0x50, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77, 0x52, 0x08, 0x70, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77,
 	0x73, 0x22, 0x7c, 0x0a, 0x17, 0x53, 0x61, 0x76, 0x65, 0x55, 0x73, 0x65, 0x72, 0x53, 0x65, 0x63,
-	0x72, 0x65, 0x74, 0x56, 0x31, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x30, 0x0a, 0x0f,
+	0x72, 0x65, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x56, 0x31, 0x12, 0x30, 0x0a, 0x0f,
 	0x6d, 0x61, 0x73, 0x74, 0x65, 0x72, 0x5f, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18,
 	0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x07, 0xba, 0x48, 0x04, 0x72, 0x02, 0x10, 0x01, 0x52, 0x0e,
 	0x6d, 0x61, 0x73, 0x74, 0x65, 0x72, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x12, 0x2f,
@@ -1050,17 +1050,17 @@ var file_proto_keeper_v1_secrets_proto_rawDesc = []byte{
 	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x6b, 0x65, 0x65, 0x70, 0x65, 0x72, 0x2e, 0x76, 0x31,
 	0x2e, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x52, 0x06, 0x73, 0x65, 0x63, 0x72, 0x65, 0x74, 0x22,
 	0x5a, 0x0a, 0x16, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74,
-	0x56, 0x31, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x30, 0x0a, 0x0f, 0x6d, 0x61, 0x73,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x56, 0x31, 0x12, 0x30, 0x0a, 0x0f, 0x6d, 0x61, 0x73,
 	0x74, 0x65, 0x72, 0x5f, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x01, 0x20, 0x01,
 	0x28, 0x09, 0x42, 0x07, 0xba, 0x48, 0x04, 0x72, 0x02, 0x10, 0x01, 0x52, 0x0e, 0x6d, 0x61, 0x73,
 	0x74, 0x65, 0x72, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x12, 0x0e, 0x0a, 0x02, 0x69,
 	0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x02, 0x69, 0x64, 0x22, 0x4a, 0x0a, 0x17, 0x47,
-	0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x56, 0x31, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x2f, 0x0a, 0x06, 0x73, 0x65, 0x63, 0x72, 0x65, 0x74,
+	0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x52, 0x65, 0x73, 0x70,
+	0x6f, 0x6e, 0x73, 0x65, 0x56, 0x31, 0x12, 0x2f, 0x0a, 0x06, 0x73, 0x65, 0x63, 0x72, 0x65, 0x74,
 	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x17, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x6b,
 	0x65, 0x65, 0x70, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x52,
 	0x06, 0x73, 0x65, 0x63, 0x72, 0x65, 0x74, 0x22, 0x8d, 0x01, 0x0a, 0x13, 0x55, 0x70, 0x6c, 0x6f,
-	0x61, 0x64, 0x46, 0x69, 0x6c, 0x65, 0x56, 0x31, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x61, 0x64, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x56, 0x31, 0x12,
 	0x1a, 0x0a, 0x08, 0x6d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0x18, 0x01, 0x20, 0x01, 0x28,
 	0x09, 0x52, 0x08, 0x6d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0x12, 0x1b, 0x0a, 0x09, 0x66,
 	0x69, 0x6c, 0x65, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08,
@@ -1069,13 +1069,13 @@ var file_proto_keeper_v1_secrets_proto_rawDesc = []byte{
 	0x09, 0x52, 0x0e, 0x6d, 0x61, 0x73, 0x74, 0x65, 0x72, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72,
 	0x64, 0x12, 0x14, 0x0a, 0x05, 0x63, 0x68, 0x75, 0x6e, 0x6b, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0c,
 	0x52, 0x05, 0x63, 0x68, 0x75, 0x6e, 0x6b, 0x22, 0x59, 0x0a, 0x15, 0x44, 0x6f, 0x77, 0x6e, 0x6c,
-	0x6f, 0x61, 0x64, 0x46, 0x69, 0x6c, 0x65, 0x56, 0x31, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x6f, 0x61, 0x64, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x56, 0x31,
 	0x12, 0x30, 0x0a, 0x0f, 0x6d, 0x61, 0x73, 0x74, 0x65, 0x72, 0x5f, 0x70, 0x61, 0x73, 0x73, 0x77,
 	0x6f, 0x72, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x07, 0xba, 0x48, 0x04, 0x72, 0x02,
 	0x10, 0x01, 0x52, 0x0e, 0x6d, 0x61, 0x73, 0x74, 0x65, 0x72, 0x50, 0x61, 0x73, 0x73, 0x77, 0x6f,
 	0x72, 0x64, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x04, 0x52, 0x02,
 	0x69, 0x64, 0x22, 0x2e, 0x0a, 0x16, 0x44, 0x6f, 0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x46, 0x69,
-	0x6c, 0x65, 0x56, 0x31, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05,
+	0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x56, 0x31, 0x12, 0x14, 0x0a, 0x05,
 	0x63, 0x68, 0x75, 0x6e, 0x6b, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x63, 0x68, 0x75,
 	0x6e, 0x6b, 0x2a, 0x87, 0x01, 0x0a, 0x0a, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x54, 0x79, 0x70,
 	0x65, 0x12, 0x1b, 0x0a, 0x17, 0x53, 0x45, 0x43, 0x52, 0x45, 0x54, 0x5f, 0x54, 0x59, 0x50, 0x45,
@@ -1097,31 +1097,31 @@ var file_proto_keeper_v1_secrets_proto_rawDesc = []byte{
 	0x12, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
 	0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x29, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
 	0x2e, 0x6b, 0x65, 0x65, 0x70, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x65, 0x63, 0x72, 0x65,
-	0x74, 0x50, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77, 0x73, 0x56, 0x31, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x12, 0x54, 0x0a, 0x10, 0x53, 0x61, 0x76, 0x65, 0x55, 0x73, 0x65, 0x72, 0x53,
+	0x74, 0x50, 0x72, 0x65, 0x76, 0x69, 0x65, 0x77, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x56, 0x31, 0x12, 0x54, 0x0a, 0x10, 0x53, 0x61, 0x76, 0x65, 0x55, 0x73, 0x65, 0x72, 0x53,
 	0x65, 0x63, 0x72, 0x65, 0x74, 0x56, 0x31, 0x12, 0x28, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e,
 	0x6b, 0x65, 0x65, 0x70, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x61, 0x76, 0x65, 0x55, 0x73,
-	0x65, 0x72, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x56, 0x31, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
-	0x74, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x65, 0x72, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x56,
+	0x31, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
 	0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x12, 0x64, 0x0a, 0x0f, 0x47, 0x65, 0x74,
 	0x55, 0x73, 0x65, 0x72, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x56, 0x31, 0x12, 0x27, 0x2e, 0x70,
 	0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x6b, 0x65, 0x65, 0x70, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x2e, 0x47,
-	0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x56, 0x31, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x28, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x6b, 0x65,
+	0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x56, 0x31, 0x1a, 0x28, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x6b, 0x65,
 	0x65, 0x70, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x53,
-	0x65, 0x63, 0x72, 0x65, 0x74, 0x56, 0x31, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
+	0x65, 0x63, 0x72, 0x65, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x56, 0x31, 0x12,
 	0x4e, 0x0a, 0x0c, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x46, 0x69, 0x6c, 0x65, 0x56, 0x31, 0x12,
 	0x24, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x6b, 0x65, 0x65, 0x70, 0x65, 0x72, 0x2e, 0x76,
-	0x31, 0x2e, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x46, 0x69, 0x6c, 0x65, 0x56, 0x31, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70,
+	0x31, 0x2e, 0x55, 0x70, 0x6c, 0x6f, 0x61, 0x64, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x56, 0x31, 0x1a, 0x16, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70,
 	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x28, 0x01, 0x12,
 	0x63, 0x0a, 0x0e, 0x44, 0x6f, 0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x46, 0x69, 0x6c, 0x65, 0x56,
 	0x31, 0x12, 0x26, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x6b, 0x65, 0x65, 0x70, 0x65, 0x72,
 	0x2e, 0x76, 0x31, 0x2e, 0x44, 0x6f, 0x77, 0x6e, 0x6c, 0x6f, 0x61, 0x64, 0x46, 0x69, 0x6c, 0x65,
-	0x56, 0x31, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x27, 0x2e, 0x70, 0x72, 0x6f, 0x74,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x56, 0x31, 0x1a, 0x27, 0x2e, 0x70, 0x72, 0x6f, 0x74,
 	0x6f, 0x2e, 0x6b, 0x65, 0x65, 0x70, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x6f, 0x77, 0x6e,
-	0x6c, 0x6f, 0x61, 0x64, 0x46, 0x69, 0x6c, 0x65, 0x56, 0x31, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x30, 0x01, 0x42, 0x9b, 0x01, 0x0a, 0x13, 0x63, 0x6f, 0x6d, 0x2e, 0x70, 0x72, 0x6f,
+	0x6c, 0x6f, 0x61, 0x64, 0x46, 0x69, 0x6c, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x56, 0x31, 0x30, 0x01, 0x42, 0x9b, 0x01, 0x0a, 0x13, 0x63, 0x6f, 0x6d, 0x2e, 0x70, 0x72, 0x6f,
 	0x74, 0x6f, 0x2e, 0x6b, 0x65, 0x65, 0x70, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x42, 0x0c, 0x53, 0x65,
 	0x63, 0x72, 0x65, 0x74, 0x73, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x18, 0x70, 0x72,
 	0x6f, 0x74, 0x6f, 0x2f, 0x6b, 0x65, 0x65, 0x70, 0x65, 0x72, 0x2f, 0x76, 0x31, 0x3b, 0x6b, 0x65,
@@ -1157,13 +1157,13 @@ var file_proto_keeper_v1_secrets_proto_goTypes = []any{
 	(*Blob)(nil),                     // 5: proto.keeper.v1.Blob
 	(*Card)(nil),                     // 6: proto.keeper.v1.Card
 	(*SecretPreview)(nil),            // 7: proto.keeper.v1.SecretPreview
-	(*SecretPreviewsV1Response)(nil), // 8: proto.keeper.v1.SecretPreviewsV1Response
-	(*SaveUserSecretV1Request)(nil),  // 9: proto.keeper.v1.SaveUserSecretV1Request
-	(*GetUserSecretV1Request)(nil),   // 10: proto.keeper.v1.GetUserSecretV1Request
-	(*GetUserSecretV1Response)(nil),  // 11: proto.keeper.v1.GetUserSecretV1Response
-	(*UploadFileV1Request)(nil),      // 12: proto.keeper.v1.UploadFileV1Request
-	(*DownloadFileV1Request)(nil),    // 13: proto.keeper.v1.DownloadFileV1Request
-	(*DownloadFileV1Response)(nil),   // 14: proto.keeper.v1.DownloadFileV1Response
+	(*SecretPreviewsResponseV1)(nil), // 8: proto.keeper.v1.SecretPreviewsResponseV1
+	(*SaveUserSecretRequestV1)(nil),  // 9: proto.keeper.v1.SaveUserSecretRequestV1
+	(*GetUserSecretRequestV1)(nil),   // 10: proto.keeper.v1.GetUserSecretRequestV1
+	(*GetUserSecretResponseV1)(nil),  // 11: proto.keeper.v1.GetUserSecretResponseV1
+	(*UploadFileRequestV1)(nil),      // 12: proto.keeper.v1.UploadFileRequestV1
+	(*DownloadFileRequestV1)(nil),    // 13: proto.keeper.v1.DownloadFileRequestV1
+	(*DownloadFileResponseV1)(nil),   // 14: proto.keeper.v1.DownloadFileResponseV1
 	(*timestamppb.Timestamp)(nil),    // 15: google.protobuf.Timestamp
 	(*emptypb.Empty)(nil),            // 16: google.protobuf.Empty
 }
@@ -1178,19 +1178,19 @@ var file_proto_keeper_v1_secrets_proto_depIdxs = []int32{
 	15, // 7: proto.keeper.v1.SecretPreview.created_at:type_name -> google.protobuf.Timestamp
 	15, // 8: proto.keeper.v1.SecretPreview.updated_at:type_name -> google.protobuf.Timestamp
 	0,  // 9: proto.keeper.v1.SecretPreview.type:type_name -> proto.keeper.v1.SecretType
-	7,  // 10: proto.keeper.v1.SecretPreviewsV1Response.previews:type_name -> proto.keeper.v1.SecretPreview
-	2,  // 11: proto.keeper.v1.SaveUserSecretV1Request.secret:type_name -> proto.keeper.v1.Secret
-	2,  // 12: proto.keeper.v1.GetUserSecretV1Response.secret:type_name -> proto.keeper.v1.Secret
+	7,  // 10: proto.keeper.v1.SecretPreviewsResponseV1.previews:type_name -> proto.keeper.v1.SecretPreview
+	2,  // 11: proto.keeper.v1.SaveUserSecretRequestV1.secret:type_name -> proto.keeper.v1.Secret
+	2,  // 12: proto.keeper.v1.GetUserSecretResponseV1.secret:type_name -> proto.keeper.v1.Secret
 	16, // 13: proto.keeper.v1.SecretsService.SecretPreviewsV1:input_type -> google.protobuf.Empty
-	9,  // 14: proto.keeper.v1.SecretsService.SaveUserSecretV1:input_type -> proto.keeper.v1.SaveUserSecretV1Request
-	10, // 15: proto.keeper.v1.SecretsService.GetUserSecretV1:input_type -> proto.keeper.v1.GetUserSecretV1Request
-	12, // 16: proto.keeper.v1.SecretsService.UploadFileV1:input_type -> proto.keeper.v1.UploadFileV1Request
-	13, // 17: proto.keeper.v1.SecretsService.DownloadFileV1:input_type -> proto.keeper.v1.DownloadFileV1Request
-	8,  // 18: proto.keeper.v1.SecretsService.SecretPreviewsV1:output_type -> proto.keeper.v1.SecretPreviewsV1Response
+	9,  // 14: proto.keeper.v1.SecretsService.SaveUserSecretV1:input_type -> proto.keeper.v1.SaveUserSecretRequestV1
+	10, // 15: proto.keeper.v1.SecretsService.GetUserSecretV1:input_type -> proto.keeper.v1.GetUserSecretRequestV1
+	12, // 16: proto.keeper.v1.SecretsService.UploadFileV1:input_type -> proto.keeper.v1.UploadFileRequestV1
+	13, // 17: proto.keeper.v1.SecretsService.DownloadFileV1:input_type -> proto.keeper.v1.DownloadFileRequestV1
+	8,  // 18: proto.keeper.v1.SecretsService.SecretPreviewsV1:output_type -> proto.keeper.v1.SecretPreviewsResponseV1
 	16, // 19: proto.keeper.v1.SecretsService.SaveUserSecretV1:output_type -> google.protobuf.Empty
-	11, // 20: proto.keeper.v1.SecretsService.GetUserSecretV1:output_type -> proto.keeper.v1.GetUserSecretV1Response
+	11, // 20: proto.keeper.v1.SecretsService.GetUserSecretV1:output_type -> proto.keeper.v1.GetUserSecretResponseV1
 	16, // 21: proto.keeper.v1.SecretsService.UploadFileV1:output_type -> google.protobuf.Empty
-	14, // 22: proto.keeper.v1.SecretsService.DownloadFileV1:output_type -> proto.keeper.v1.DownloadFileV1Response
+	14, // 22: proto.keeper.v1.SecretsService.DownloadFileV1:output_type -> proto.keeper.v1.DownloadFileResponseV1
 	18, // [18:23] is the sub-list for method output_type
 	13, // [13:18] is the sub-list for method input_type
 	13, // [13:13] is the sub-list for extension type_name
@@ -1277,7 +1277,7 @@ func file_proto_keeper_v1_secrets_proto_init() {
 			}
 		}
 		file_proto_keeper_v1_secrets_proto_msgTypes[6].Exporter = func(v any, i int) any {
-			switch v := v.(*SecretPreviewsV1Response); i {
+			switch v := v.(*SecretPreviewsResponseV1); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1289,7 +1289,7 @@ func file_proto_keeper_v1_secrets_proto_init() {
 			}
 		}
 		file_proto_keeper_v1_secrets_proto_msgTypes[7].Exporter = func(v any, i int) any {
-			switch v := v.(*SaveUserSecretV1Request); i {
+			switch v := v.(*SaveUserSecretRequestV1); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1301,7 +1301,7 @@ func file_proto_keeper_v1_secrets_proto_init() {
 			}
 		}
 		file_proto_keeper_v1_secrets_proto_msgTypes[8].Exporter = func(v any, i int) any {
-			switch v := v.(*GetUserSecretV1Request); i {
+			switch v := v.(*GetUserSecretRequestV1); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1313,7 +1313,7 @@ func file_proto_keeper_v1_secrets_proto_init() {
 			}
 		}
 		file_proto_keeper_v1_secrets_proto_msgTypes[9].Exporter = func(v any, i int) any {
-			switch v := v.(*GetUserSecretV1Response); i {
+			switch v := v.(*GetUserSecretResponseV1); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1325,7 +1325,7 @@ func file_proto_keeper_v1_secrets_proto_init() {
 			}
 		}
 		file_proto_keeper_v1_secrets_proto_msgTypes[10].Exporter = func(v any, i int) any {
-			switch v := v.(*UploadFileV1Request); i {
+			switch v := v.(*UploadFileRequestV1); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1337,7 +1337,7 @@ func file_proto_keeper_v1_secrets_proto_init() {
 			}
 		}
 		file_proto_keeper_v1_secrets_proto_msgTypes[11].Exporter = func(v any, i int) any {
-			switch v := v.(*DownloadFileV1Request); i {
+			switch v := v.(*DownloadFileRequestV1); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1349,7 +1349,7 @@ func file_proto_keeper_v1_secrets_proto_init() {
 			}
 		}
 		file_proto_keeper_v1_secrets_proto_msgTypes[12].Exporter = func(v any, i int) any {
-			switch v := v.(*DownloadFileV1Response); i {
+			switch v := v.(*DownloadFileResponseV1); i {
 			case 0:
 				return &v.state
 			case 1:

@@ -22,7 +22,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type LoginV1Request struct {
+type LoginRequestV1 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -31,8 +31,8 @@ type LoginV1Request struct {
 	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
 }
 
-func (x *LoginV1Request) Reset() {
-	*x = LoginV1Request{}
+func (x *LoginRequestV1) Reset() {
+	*x = LoginRequestV1{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_keeper_v1_auth_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -40,13 +40,13 @@ func (x *LoginV1Request) Reset() {
 	}
 }
 
-func (x *LoginV1Request) String() string {
+func (x *LoginRequestV1) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LoginV1Request) ProtoMessage() {}
+func (*LoginRequestV1) ProtoMessage() {}
 
-func (x *LoginV1Request) ProtoReflect() protoreflect.Message {
+func (x *LoginRequestV1) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_keeper_v1_auth_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -58,26 +58,26 @@ func (x *LoginV1Request) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LoginV1Request.ProtoReflect.Descriptor instead.
-func (*LoginV1Request) Descriptor() ([]byte, []int) {
+// Deprecated: Use LoginRequestV1.ProtoReflect.Descriptor instead.
+func (*LoginRequestV1) Descriptor() ([]byte, []int) {
 	return file_proto_keeper_v1_auth_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *LoginV1Request) GetLogin() string {
+func (x *LoginRequestV1) GetLogin() string {
 	if x != nil {
 		return x.Login
 	}
 	return ""
 }
 
-func (x *LoginV1Request) GetPassword() string {
+func (x *LoginRequestV1) GetPassword() string {
 	if x != nil {
 		return x.Password
 	}
 	return ""
 }
 
-type LoginV1Response struct {
+type LoginResponseV1 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -85,8 +85,8 @@ type LoginV1Response struct {
 	AccessToken string `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
 }
 
-func (x *LoginV1Response) Reset() {
-	*x = LoginV1Response{}
+func (x *LoginResponseV1) Reset() {
+	*x = LoginResponseV1{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_keeper_v1_auth_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -94,13 +94,13 @@ func (x *LoginV1Response) Reset() {
 	}
 }
 
-func (x *LoginV1Response) String() string {
+func (x *LoginResponseV1) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*LoginV1Response) ProtoMessage() {}
+func (*LoginResponseV1) ProtoMessage() {}
 
-func (x *LoginV1Response) ProtoReflect() protoreflect.Message {
+func (x *LoginResponseV1) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_keeper_v1_auth_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -112,19 +112,19 @@ func (x *LoginV1Response) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use LoginV1Response.ProtoReflect.Descriptor instead.
-func (*LoginV1Response) Descriptor() ([]byte, []int) {
+// Deprecated: Use LoginResponseV1.ProtoReflect.Descriptor instead.
+func (*LoginResponseV1) Descriptor() ([]byte, []int) {
 	return file_proto_keeper_v1_auth_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *LoginV1Response) GetAccessToken() string {
+func (x *LoginResponseV1) GetAccessToken() string {
 	if x != nil {
 		return x.AccessToken
 	}
 	return ""
 }
 
-type RegisterV1Request struct {
+type RegisterRequestV1 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -133,8 +133,8 @@ type RegisterV1Request struct {
 	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
 }
 
-func (x *RegisterV1Request) Reset() {
-	*x = RegisterV1Request{}
+func (x *RegisterRequestV1) Reset() {
+	*x = RegisterRequestV1{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_keeper_v1_auth_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -142,13 +142,13 @@ func (x *RegisterV1Request) Reset() {
 	}
 }
 
-func (x *RegisterV1Request) String() string {
+func (x *RegisterRequestV1) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RegisterV1Request) ProtoMessage() {}
+func (*RegisterRequestV1) ProtoMessage() {}
 
-func (x *RegisterV1Request) ProtoReflect() protoreflect.Message {
+func (x *RegisterRequestV1) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_keeper_v1_auth_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -160,26 +160,26 @@ func (x *RegisterV1Request) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RegisterV1Request.ProtoReflect.Descriptor instead.
-func (*RegisterV1Request) Descriptor() ([]byte, []int) {
+// Deprecated: Use RegisterRequestV1.ProtoReflect.Descriptor instead.
+func (*RegisterRequestV1) Descriptor() ([]byte, []int) {
 	return file_proto_keeper_v1_auth_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *RegisterV1Request) GetLogin() string {
+func (x *RegisterRequestV1) GetLogin() string {
 	if x != nil {
 		return x.Login
 	}
 	return ""
 }
 
-func (x *RegisterV1Request) GetPassword() string {
+func (x *RegisterRequestV1) GetPassword() string {
 	if x != nil {
 		return x.Password
 	}
 	return ""
 }
 
-type RegisterV1Response struct {
+type RegisterResponseV1 struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -187,8 +187,8 @@ type RegisterV1Response struct {
 	AccessToken string `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
 }
 
-func (x *RegisterV1Response) Reset() {
-	*x = RegisterV1Response{}
+func (x *RegisterResponseV1) Reset() {
+	*x = RegisterResponseV1{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_proto_keeper_v1_auth_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -196,13 +196,13 @@ func (x *RegisterV1Response) Reset() {
 	}
 }
 
-func (x *RegisterV1Response) String() string {
+func (x *RegisterResponseV1) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RegisterV1Response) ProtoMessage() {}
+func (*RegisterResponseV1) ProtoMessage() {}
 
-func (x *RegisterV1Response) ProtoReflect() protoreflect.Message {
+func (x *RegisterResponseV1) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_keeper_v1_auth_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -214,12 +214,12 @@ func (x *RegisterV1Response) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RegisterV1Response.ProtoReflect.Descriptor instead.
-func (*RegisterV1Response) Descriptor() ([]byte, []int) {
+// Deprecated: Use RegisterResponseV1.ProtoReflect.Descriptor instead.
+func (*RegisterResponseV1) Descriptor() ([]byte, []int) {
 	return file_proto_keeper_v1_auth_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *RegisterV1Response) GetAccessToken() string {
+func (x *RegisterResponseV1) GetAccessToken() string {
 	if x != nil {
 		return x.AccessToken
 	}
@@ -234,36 +234,36 @@ var file_proto_keeper_v1_auth_proto_rawDesc = []byte{
 	0x6f, 0x74, 0x6f, 0x2e, 0x6b, 0x65, 0x65, 0x70, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x1a, 0x1b, 0x62,
 	0x75, 0x66, 0x2f, 0x76, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x2f, 0x76, 0x61, 0x6c, 0x69,
 	0x64, 0x61, 0x74, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x58, 0x0a, 0x0e, 0x4c, 0x6f,
-	0x67, 0x69, 0x6e, 0x56, 0x31, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1f, 0x0a, 0x05,
+	0x67, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x56, 0x31, 0x12, 0x1f, 0x0a, 0x05,
 	0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x09, 0xba, 0x48, 0x06,
 	0x72, 0x04, 0x10, 0x05, 0x18, 0x64, 0x52, 0x05, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x12, 0x25, 0x0a,
 	0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x42,
 	0x09, 0xba, 0x48, 0x06, 0x72, 0x04, 0x10, 0x06, 0x18, 0x14, 0x52, 0x08, 0x70, 0x61, 0x73, 0x73,
-	0x77, 0x6f, 0x72, 0x64, 0x22, 0x34, 0x0a, 0x0f, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x56, 0x31, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x21, 0x0a, 0x0c, 0x61, 0x63, 0x63, 0x65, 0x73,
+	0x77, 0x6f, 0x72, 0x64, 0x22, 0x34, 0x0a, 0x0f, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x56, 0x31, 0x12, 0x21, 0x0a, 0x0c, 0x61, 0x63, 0x63, 0x65, 0x73,
 	0x73, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x61,
 	0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0x5b, 0x0a, 0x11, 0x52, 0x65,
-	0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x56, 0x31, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+	0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x56, 0x31, 0x12,
 	0x1f, 0x0a, 0x05, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x09,
 	0xba, 0x48, 0x06, 0x72, 0x04, 0x10, 0x05, 0x18, 0x64, 0x52, 0x05, 0x6c, 0x6f, 0x67, 0x69, 0x6e,
 	0x12, 0x25, 0x0a, 0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01,
 	0x28, 0x09, 0x42, 0x09, 0xba, 0x48, 0x06, 0x72, 0x04, 0x10, 0x06, 0x18, 0x14, 0x52, 0x08, 0x70,
 	0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x22, 0x37, 0x0a, 0x12, 0x52, 0x65, 0x67, 0x69, 0x73,
-	0x74, 0x65, 0x72, 0x56, 0x31, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x21, 0x0a,
+	0x74, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x56, 0x31, 0x12, 0x21, 0x0a,
 	0x0c, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20,
 	0x01, 0x28, 0x09, 0x52, 0x0b, 0x61, 0x63, 0x63, 0x65, 0x73, 0x73, 0x54, 0x6f, 0x6b, 0x65, 0x6e,
 	0x32, 0xb2, 0x01, 0x0a, 0x0b, 0x41, 0x75, 0x74, 0x68, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
 	0x12, 0x4c, 0x0a, 0x07, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x56, 0x31, 0x12, 0x1f, 0x2e, 0x70, 0x72,
 	0x6f, 0x74, 0x6f, 0x2e, 0x6b, 0x65, 0x65, 0x70, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x2e, 0x4c, 0x6f,
-	0x67, 0x69, 0x6e, 0x56, 0x31, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x20, 0x2e, 0x70,
+	0x67, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x56, 0x31, 0x1a, 0x20, 0x2e, 0x70,
 	0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x6b, 0x65, 0x65, 0x70, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x2e, 0x4c,
-	0x6f, 0x67, 0x69, 0x6e, 0x56, 0x31, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x55,
+	0x6f, 0x67, 0x69, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x56, 0x31, 0x12, 0x55,
 	0x0a, 0x0a, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x56, 0x31, 0x12, 0x22, 0x2e, 0x70,
 	0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x6b, 0x65, 0x65, 0x70, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x2e, 0x52,
-	0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x56, 0x31, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x56, 0x31,
 	0x1a, 0x23, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x6b, 0x65, 0x65, 0x70, 0x65, 0x72, 0x2e,
-	0x76, 0x31, 0x2e, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x56, 0x31, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x98, 0x01, 0x0a, 0x13, 0x63, 0x6f, 0x6d, 0x2e, 0x70, 0x72,
+	0x76, 0x31, 0x2e, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x56, 0x31, 0x42, 0x98, 0x01, 0x0a, 0x13, 0x63, 0x6f, 0x6d, 0x2e, 0x70, 0x72,
 	0x6f, 0x74, 0x6f, 0x2e, 0x6b, 0x65, 0x65, 0x70, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x42, 0x09, 0x41,
 	0x75, 0x74, 0x68, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x18, 0x70, 0x72, 0x6f, 0x74,
 	0x6f, 0x2f, 0x6b, 0x65, 0x65, 0x70, 0x65, 0x72, 0x2f, 0x76, 0x31, 0x3b, 0x6b, 0x65, 0x65, 0x70,
@@ -290,16 +290,16 @@ func file_proto_keeper_v1_auth_proto_rawDescGZIP() []byte {
 
 var file_proto_keeper_v1_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_proto_keeper_v1_auth_proto_goTypes = []any{
-	(*LoginV1Request)(nil),     // 0: proto.keeper.v1.LoginV1Request
-	(*LoginV1Response)(nil),    // 1: proto.keeper.v1.LoginV1Response
-	(*RegisterV1Request)(nil),  // 2: proto.keeper.v1.RegisterV1Request
-	(*RegisterV1Response)(nil), // 3: proto.keeper.v1.RegisterV1Response
+	(*LoginRequestV1)(nil),     // 0: proto.keeper.v1.LoginRequestV1
+	(*LoginResponseV1)(nil),    // 1: proto.keeper.v1.LoginResponseV1
+	(*RegisterRequestV1)(nil),  // 2: proto.keeper.v1.RegisterRequestV1
+	(*RegisterResponseV1)(nil), // 3: proto.keeper.v1.RegisterResponseV1
 }
 var file_proto_keeper_v1_auth_proto_depIdxs = []int32{
-	0, // 0: proto.keeper.v1.AuthService.LoginV1:input_type -> proto.keeper.v1.LoginV1Request
-	2, // 1: proto.keeper.v1.AuthService.RegisterV1:input_type -> proto.keeper.v1.RegisterV1Request
-	1, // 2: proto.keeper.v1.AuthService.LoginV1:output_type -> proto.keeper.v1.LoginV1Response
-	3, // 3: proto.keeper.v1.AuthService.RegisterV1:output_type -> proto.keeper.v1.RegisterV1Response
+	0, // 0: proto.keeper.v1.AuthService.LoginV1:input_type -> proto.keeper.v1.LoginRequestV1
+	2, // 1: proto.keeper.v1.AuthService.RegisterV1:input_type -> proto.keeper.v1.RegisterRequestV1
+	1, // 2: proto.keeper.v1.AuthService.LoginV1:output_type -> proto.keeper.v1.LoginResponseV1
+	3, // 3: proto.keeper.v1.AuthService.RegisterV1:output_type -> proto.keeper.v1.RegisterResponseV1
 	2, // [2:4] is the sub-list for method output_type
 	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -314,7 +314,7 @@ func file_proto_keeper_v1_auth_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_proto_keeper_v1_auth_proto_msgTypes[0].Exporter = func(v any, i int) any {
-			switch v := v.(*LoginV1Request); i {
+			switch v := v.(*LoginRequestV1); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -326,7 +326,7 @@ func file_proto_keeper_v1_auth_proto_init() {
 			}
 		}
 		file_proto_keeper_v1_auth_proto_msgTypes[1].Exporter = func(v any, i int) any {
-			switch v := v.(*LoginV1Response); i {
+			switch v := v.(*LoginResponseV1); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -338,7 +338,7 @@ func file_proto_keeper_v1_auth_proto_init() {
 			}
 		}
 		file_proto_keeper_v1_auth_proto_msgTypes[2].Exporter = func(v any, i int) any {
-			switch v := v.(*RegisterV1Request); i {
+			switch v := v.(*RegisterRequestV1); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -350,7 +350,7 @@ func file_proto_keeper_v1_auth_proto_init() {
 			}
 		}
 		file_proto_keeper_v1_auth_proto_msgTypes[3].Exporter = func(v any, i int) any {
-			switch v := v.(*RegisterV1Response); i {
+			switch v := v.(*RegisterResponseV1); i {
 			case 0:
 				return &v.state
 			case 1:
