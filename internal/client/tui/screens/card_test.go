@@ -50,6 +50,7 @@ func TestCardModel_Edit(t *testing.T) {
 	}
 
 	c.EXPECT().LoadSecret(gomock.Any(), secretID).Return(secret, nil)
+	c.EXPECT().LoadPreviews(gomock.Any()).Return(nil, nil)
 
 	m := NewCardModel(state, secretID)
 
