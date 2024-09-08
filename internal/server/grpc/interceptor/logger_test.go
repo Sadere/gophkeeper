@@ -36,24 +36,26 @@ func TestLogger(t *testing.T) {
 	t.Run("log success", func(t *testing.T) {
 		defer buffer.Reset()
 
-		logger(context.Background(), nil, &grpc.UnaryServerInfo{
+		_, err := logger(context.Background(), nil, &grpc.UnaryServerInfo{
 			FullMethod: "TestMethod",
 		}, handler)
 
 		writer.Flush()
 
+		assert.NoError(t, err)
 		assert.Contains(t, buffer.String(), "TestMethod")
 	})
 
 	t.Run("log error", func(t *testing.T) {
 		defer buffer.Reset()
 
-		logger(context.Background(), nil, &grpc.UnaryServerInfo{
+		_, err := logger(context.Background(), nil, &grpc.UnaryServerInfo{
 			FullMethod: "TestMethod",
 		}, handlerError)
 
 		writer.Flush()
 
+		assert.Error(t, err)
 		assert.Contains(t, buffer.String(), "test error")
 	})
 }
