@@ -7,9 +7,11 @@ import (
 
 	"github.com/Sadere/gophkeeper/internal/server/model"
 	service "github.com/Sadere/gophkeeper/internal/server/service/mocks"
+	"github.com/Sadere/gophkeeper/pkg/constants"
 	pb "github.com/Sadere/gophkeeper/pkg/proto/keeper/v1"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"google.golang.org/grpc/metadata"
 )
 
 func TestRegister(t *testing.T) {
@@ -160,4 +162,32 @@ func TestLogin(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestExtractClientID(t *testing.T) {
+	t.Run("failed to get metadata", func(t *testing.T) {
+		_, err := extractClientID(context.Background())
+
+		assert.EqualError(t, err, "failed to get metadata")
+	})
+
+	t.Run("missing client id", func(t *testing.T) {
+		md := metadata.New(nil)
+
+		mdCtx := metadata.NewIncomingContext(context.Background(), md)
+		_, err := extractClientID(mdCtx)
+
+		assert.EqualError(t, err, "missing client id metadata")
+	})
+
+	t.Run("non number id", func(t *testing.T) {
+		md := metadata.New(map[string]string{
+			constants.ClientIDHeader: "invalid",
+		})
+
+		mdCtx := metadata.NewIncomingContext(context.Background(), md)
+		_, err := extractClientID(mdCtx)
+
+		assert.Error(t, err)
+	})
 }
