@@ -3,6 +3,9 @@ package grpc
 import (
 	"context"
 	"errors"
+	"io"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/Sadere/gophkeeper/internal/client/config"
@@ -85,7 +88,6 @@ func TestLoadTLSConfig(t *testing.T) {
 		assert.EqualError(t, err, "failed to read client key: open invalid: file does not exist")
 	})
 }
-
 
 func TestNewClient(t *testing.T) {
 	t.Run("client no tls", func(t *testing.T) {
@@ -453,5 +455,102 @@ func TestSaveCard(t *testing.T) {
 	err := tc.Client.SaveCard(ctx, uint64(111), "metadata", "1111111", 11, 24, 555)
 
 	// Assert
+	assert.NoError(t, err)
+}
+
+func TestUploadFile(t *testing.T) {
+	ctx := context.Background()
+	metadata := "metadata"
+	password := "password"
+	chunk := []byte("test file\n")
+
+	// Create temporary file
+	f, err := os.CreateTemp("", "test.txt")
+	require.NoError(t, err)
+	tmpPath := f.Name()
+
+	defer os.Remove(tmpPath)
+
+	_, err = f.Write(chunk)
+	require.NoError(t, err)
+
+	err = f.Close()
+	require.NoError(t, err)
+
+	tc := NewTestClient(t)
+	defer tc.Finish()
+
+	// Set master pw
+	tc.Client.masterPassword = password
+	tc.Client.chunkSize = len(chunk)
+
+	// Create mock client stream
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	stream := mock.NewMockUploadFile_ClientStream(ctrl)
+
+	// Setup mocks
+	tc.SecretsMock.EXPECT().UploadFileV1(ctx).Return(stream, nil)
+
+	stream.EXPECT().Send(
+		&pb.UploadFileRequestV1{
+			Metadata:       metadata,
+			FileName:       filepath.Base(tmpPath),
+			MasterPassword: password,
+			Chunk:          chunk,
+		},
+	).Return(nil)
+	stream.EXPECT().CloseAndRecv().Return(&emptypb.Empty{}, nil)
+
+	err = tc.Client.UploadFile(ctx, metadata, tmpPath)
+
+	// Assert successful upload
+	assert.NoError(t, err)
+}
+
+func TestDownloadFile(t *testing.T) {
+	secretID := uint64(111)
+	fileName := "test.txt"
+	fileContent := "test file content\n"
+	password := "test_password"
+	ctx := context.Background()
+
+	// Create temp dir
+	tempDir, err := os.MkdirTemp("", "downloaddir")
+	require.NoError(t, err)
+
+	defer os.RemoveAll(tempDir)
+
+	tc := NewTestClient(t)
+	defer tc.Finish()
+
+	tc.Client.config.DownloadPath = tempDir
+	tc.Client.masterPassword = password
+
+	// Create mock client stream
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	srv := mock.NewMockDownloadFile_ClientStream(ctrl)
+
+	tc.SecretsMock.EXPECT().DownloadFileV1(
+		ctx,
+		&pb.DownloadFileRequestV1{
+			Id:             secretID,
+			MasterPassword: password,
+		},
+	).Return(srv, nil)
+
+	srv.EXPECT().Recv().Return(
+		&pb.DownloadFileResponseV1{
+			Chunk: []byte(fileContent),
+		},
+		nil,
+	)
+	srv.EXPECT().Recv().Return(nil, io.EOF)
+
+	err = tc.Client.DownloadFile(ctx, secretID, fileName)
+
 	assert.NoError(t, err)
 }
