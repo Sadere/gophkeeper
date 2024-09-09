@@ -253,7 +253,7 @@ func (c *GRPCClient) SaveCredential(ctx context.Context, ID uint64, metadata, lo
 	}
 
 	// performing gRPC call
-	_, err := c.secretsClient.SaveUserSecretV1(context.Background(), request)
+	_, err := c.secretsClient.SaveUserSecretV1(ctx, request)
 
 	return err
 }
@@ -277,7 +277,7 @@ func (c *GRPCClient) SaveText(ctx context.Context, ID uint64, metadata, text str
 	}
 
 	// performing gRPC call
-	_, err := c.secretsClient.SaveUserSecretV1(context.Background(), request)
+	_, err := c.secretsClient.SaveUserSecretV1(ctx, request)
 
 	return err
 }
@@ -304,7 +304,7 @@ func (c *GRPCClient) SaveCard(ctx context.Context, ID uint64, metadata, number s
 	}
 
 	// performing gRPC call
-	_, err := c.secretsClient.SaveUserSecretV1(context.Background(), request)
+	_, err := c.secretsClient.SaveUserSecretV1(ctx, request)
 
 	return err
 }
