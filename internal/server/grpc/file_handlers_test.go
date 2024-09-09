@@ -10,9 +10,9 @@ import (
 
 	"github.com/Sadere/gophkeeper/pkg/constants"
 	"github.com/Sadere/gophkeeper/pkg/model"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 
 	pb "github.com/Sadere/gophkeeper/pkg/proto/keeper/v1"
 	mock "github.com/Sadere/gophkeeper/pkg/proto/keeper/v1/mocks"
