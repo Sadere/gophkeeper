@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package proto.keeper.v1;
+
+option go_package = "github.com/Sadere/gophkeeper/pkg/keeper/v1";
+
+message SubscribeV1Request {
+  int32 id = 1;
+}
+
+message SubscribeResponseV1 {
+  uint64 id = 1;
+  bool updated = 2;
+}
+
+service NotificationService {
+  rpc SubscribeV1(SubscribeV1Request) returns (stream SubscribeResponseV1);
+}

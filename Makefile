@@ -1,5 +1,7 @@
-GOCMD=go
+BUILD_DATE="$(shell date -u +'%Y-%m-%dT%H:%M:%SZ')"
+VERSION="$(shell git describe --tags --abbrev=0 | tr -d '\n')"
 DOCKER_COMPOSE_FILES ?= $(shell find docker -maxdepth 1 -type f -name "*.yaml" -exec printf -- '-f %s ' {} +; echo)
+BINARY_NAME=gophkeeper
 
 ## Buf build commands ##
 
@@ -34,4 +36,10 @@ ps:
 
 .PHONY: imports
 imports:
-	goimports -w .
+	goimports -w $(find . -type f -name '*.go' -not -path "./pkg/proto/*")
+
+.PHONY: build
+build:
+	GOARCH=amd64 GOOS=darwin go build -o bin/${BINARY_NAME}-darwin -ldflags="-X 'github.com/Sadere/gophkeeper/internal/client/version.buildDate=${BUILD_DATE}' -X 'github.com/Sadere/gophkeeper/internal/client/version.version=${VERSION}'" cmd/client/main.go
+	GOARCH=amd64 GOOS=linux go build -o bin/${BINARY_NAME}-linux -ldflags="-X 'github.com/Sadere/gophkeeper/internal/client/version.buildDate=${BUILD_DATE}' -X 'github.com/Sadere/gophkeeper/internal/client/version.version=${VERSION}'" cmd/client/main.go
+	GOARCH=amd64 GOOS=windows go build -o bin/${BINARY_NAME}-windows -ldflags="-X 'github.com/Sadere/gophkeeper/internal/client/version.buildDate=${BUILD_DATE}' -X 'github.com/Sadere/gophkeeper/internal/client/version.version=${VERSION}'" cmd/client/main.go

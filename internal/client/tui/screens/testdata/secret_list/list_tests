@@ -1,0 +1,44 @@
+run
+resize 100 25
+----
+TEA WINDOW SIZE: {100 25}
+-- view:
+   My secrets list                                 ␤
+                                                   ␤
+  4 items                                          ␤
+                                                   ␤
+*** NEW *** 🔑 creds                               ␤
+Created: 0001-01-01 00:00 Updated: 0001-01-01 00:00␤
+                                                   ␤
+*** EDITED *** 💳 card                             ␤
+Created: 0001-01-01 00:00 Updated: 0001-01-01 00:00␤
+                                                   ␤
+ 📒 text                                           ␤
+Created: 0001-01-01 00:00 Updated: 0001-01-01 00:00␤
+                                                   ␤
+ 📁 blob                                           ␤
+Created: 0001-01-01 00:00 Updated: 0001-01-01 00:00␤
+                                                   ␤
+                                                   ␤
+                                                   ␤
+                                                   ␤
+                                                   ␤
+                                                   🛇
+
+# Add new
+run
+key a
+----
+-- view:
+What would you like to do?␤
+␤
+> Go back␤
+         ␤
+  Add new credentials␤
+                     ␤
+  Add text␤
+          ␤
+  Upload file␤
+             ␤
+  Add card info␤
+               ␤

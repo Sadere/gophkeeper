@@ -1,8 +1,8 @@
+// Provides different building blocks for TUI
 package components
 
 import (
 	"fmt"
-	"log"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -11,6 +11,7 @@ import (
 	"github.com/charmbracelet/bubbles/textinput"
 )
 
+// TUI component with multiple input models and submit button
 type InputGroup struct {
 	Inputs     []textinput.Model
 	InputNum   int
@@ -18,6 +19,17 @@ type InputGroup struct {
 }
 
 func NewInputGroup(inputs []textinput.Model) InputGroup {
+	// Set styles
+	for i, input := range inputs {
+		if i == 0 {
+			input.PromptStyle = style.FocusedStyle
+			input.Cursor.Style = style.FocusedStyle
+			input.TextStyle = style.FocusedStyle
+		}
+
+		inputs[i] = input
+	}
+
 	return InputGroup{
 		Inputs:   inputs,
 		InputNum: len(inputs),
@@ -25,7 +37,7 @@ func NewInputGroup(inputs []textinput.Model) InputGroup {
 }
 
 func (m InputGroup) Init() tea.Cmd {
-	return nil
+	return textinput.Blink
 }
 
 func (m InputGroup) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -47,7 +59,6 @@ func (m InputGroup) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else if m.FocusIndex < 0 {
 				m.FocusIndex = m.InputNum
 			}
-			log.Printf("%d\n", m.FocusIndex)
 
 			cmds := make([]tea.Cmd, m.InputNum)
 			for i := 0; i <= m.InputNum-1; i++ {
@@ -98,7 +109,7 @@ func (m InputGroup) View() string {
 	if m.FocusIndex == m.InputNum {
 		button = style.FocusedStyle.Render("[ Submit ]")
 	}
-	fmt.Fprintf(&b, "\n\n%s\n\n", button)
+	fmt.Fprintf(&b, "\n\n%s\n", button)
 
 	return b.String()
 }

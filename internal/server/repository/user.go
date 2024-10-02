@@ -1,22 +1,28 @@
+// Provides functions for storing data in database
 package repository
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 
 	"github.com/Sadere/gophkeeper/internal/server/model"
 	"github.com/jmoiron/sqlx"
 )
 
+//go:generate mockgen -source user.go -destination mocks/mock_user.go -package repository
 type UserRepository interface {
 	Create(ctx context.Context, user model.User) (uint64, error)
 	GetUserByID(ctx context.Context, ID uint64) (*model.User, error)
 	GetUserByLogin(ctx context.Context, login string) (*model.User, error)
 }
 
+// User repository using PostgreSQL
 type PgUserRepository struct {
 	db *sqlx.DB
 }
 
+// Returns new postgresql user repository
 func NewPgUserRepository(db *sqlx.DB) *PgUserRepository {
 	return &PgUserRepository{
 		db: db,
@@ -48,6 +54,10 @@ func (r *PgUserRepository) GetUserByID(ctx context.Context, ID uint64) (*model.U
 
 	err := r.db.QueryRowxContext(ctx, "SELECT id, login, created_at, password FROM users WHERE id = $1", ID).StructScan(&user)
 
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, err
+	}
+
 	return &user, err
 }
 
@@ -56,6 +66,10 @@ func (r *PgUserRepository) GetUserByLogin(ctx context.Context, login string) (*m
 	var user model.User
 
 	err := r.db.QueryRowxContext(ctx, "SELECT id, login, created_at, password FROM users WHERE login = $1", login).StructScan(&user)
+
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, err
+	}
 
 	return &user, err
 }

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"reflect"
 	"testing"
@@ -24,7 +25,7 @@ func NewMock(t *testing.T) (*sqlx.DB, sqlmock.Sqlmock) {
 	return dbx, mock
 }
 
-func TestCreateSuccess(t *testing.T) {
+func TestUserCreateSuccess(t *testing.T) {
 	db, mock := NewMock(t)
 	repo := NewPgUserRepository(db)
 
@@ -47,7 +48,7 @@ func TestCreateSuccess(t *testing.T) {
 	assert.Equal(t, expectedUserID, actualUserID)
 }
 
-func TestCreateError(t *testing.T) {
+func TestUserCreateError(t *testing.T) {
 	db, mock := NewMock(t)
 	repo := NewPgUserRepository(db)
 
@@ -80,18 +81,28 @@ func TestGetUserByID(t *testing.T) {
 		CreatedAt:    time.Now(),
 	}
 
-	rows := sqlmock.NewRows([]string{"id", "login", "created_at", "password"}).
-		AddRow(expectedUser.ID, expectedUser.Login, expectedUser.CreatedAt, expectedUser.PasswordHash)
-	mock.ExpectQuery("SELECT (.+) FROM users WHERE id").WithArgs(expectedUser.ID).WillReturnRows(rows)
+	t.Run("success", func(t *testing.T) {
+		rows := sqlmock.NewRows([]string{"id", "login", "created_at", "password"}).
+			AddRow(expectedUser.ID, expectedUser.Login, expectedUser.CreatedAt, expectedUser.PasswordHash)
+		mock.ExpectQuery("SELECT (.+) FROM users WHERE id").WithArgs(expectedUser.ID).WillReturnRows(rows)
 
-	// Test function
-	actualUser, err := repo.GetUserByID(context.Background(), expectedUser.ID)
+		// Test function
+		actualUser, err := repo.GetUserByID(context.Background(), expectedUser.ID)
 
-	assert.NoError(t, err)
+		assert.NoError(t, err)
 
-	if !reflect.DeepEqual(expectedUser, actualUser) {
-		t.Errorf("unexpected user want = %v got = %v", expectedUser, actualUser)
-	}
+		if !reflect.DeepEqual(expectedUser, actualUser) {
+			t.Errorf("unexpected user want = %v got = %v", expectedUser, actualUser)
+		}
+	})
+
+	t.Run("user not found", func(t *testing.T) {
+		mock.ExpectQuery("SELECT (.+) FROM users WHERE id").WithArgs(expectedUser.ID).WillReturnError(sql.ErrNoRows)
+
+		_, err := repo.GetUserByID(context.Background(), expectedUser.ID)
+
+		assert.EqualError(t, err, sql.ErrNoRows.Error())
+	})
 }
 
 func TestGetUserByLogin(t *testing.T) {
@@ -105,16 +116,27 @@ func TestGetUserByLogin(t *testing.T) {
 		CreatedAt:    time.Now(),
 	}
 
-	rows := sqlmock.NewRows([]string{"id", "login", "created_at", "password"}).
-		AddRow(expectedUser.ID, expectedUser.Login, expectedUser.CreatedAt, expectedUser.PasswordHash)
-	mock.ExpectQuery("SELECT (.+) FROM users WHERE login").WithArgs(expectedUser.Login).WillReturnRows(rows)
+	t.Run("success", func(t *testing.T) {
+		rows := sqlmock.NewRows([]string{"id", "login", "created_at", "password"}).
+			AddRow(expectedUser.ID, expectedUser.Login, expectedUser.CreatedAt, expectedUser.PasswordHash)
+		mock.ExpectQuery("SELECT (.+) FROM users WHERE login").WithArgs(expectedUser.Login).WillReturnRows(rows)
 
-	// Test function
-	actualUser, err := repo.GetUserByLogin(context.Background(), expectedUser.Login)
+		// Test function
+		actualUser, err := repo.GetUserByLogin(context.Background(), expectedUser.Login)
 
-	assert.NoError(t, err)
+		assert.NoError(t, err)
 
-	if !reflect.DeepEqual(expectedUser, actualUser) {
-		t.Errorf("unexpected user want = %v got = %v", expectedUser, actualUser)
-	}
+		if !reflect.DeepEqual(expectedUser, actualUser) {
+			t.Errorf("unexpected user want = %v got = %v", expectedUser, actualUser)
+		}
+	})
+
+	t.Run("user not found", func(t *testing.T) {
+		mock.ExpectQuery("SELECT (.+) FROM users WHERE login").WithArgs(expectedUser.Login).WillReturnError(sql.ErrNoRows)
+
+		// Test function
+		_, err := repo.GetUserByLogin(context.Background(), expectedUser.Login)
+
+		assert.EqualError(t, err, sql.ErrNoRows.Error())
+	})
 }

@@ -2,12 +2,13 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             (unknown)
-// source: proto/keeper/v1/keeper.proto
+// source: proto/keeper/v1/auth.proto
 
 package keeperv1
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -27,8 +28,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthServiceClient interface {
-	LoginV1(ctx context.Context, in *LoginV1Request, opts ...grpc.CallOption) (*LoginV1Response, error)
-	RegisterV1(ctx context.Context, in *RegisterV1Request, opts ...grpc.CallOption) (*RegisterV1Response, error)
+	LoginV1(ctx context.Context, in *LoginRequestV1, opts ...grpc.CallOption) (*LoginResponseV1, error)
+	RegisterV1(ctx context.Context, in *RegisterRequestV1, opts ...grpc.CallOption) (*RegisterResponseV1, error)
 }
 
 type authServiceClient struct {
@@ -39,9 +40,9 @@ func NewAuthServiceClient(cc grpc.ClientConnInterface) AuthServiceClient {
 	return &authServiceClient{cc}
 }
 
-func (c *authServiceClient) LoginV1(ctx context.Context, in *LoginV1Request, opts ...grpc.CallOption) (*LoginV1Response, error) {
+func (c *authServiceClient) LoginV1(ctx context.Context, in *LoginRequestV1, opts ...grpc.CallOption) (*LoginResponseV1, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(LoginV1Response)
+	out := new(LoginResponseV1)
 	err := c.cc.Invoke(ctx, AuthService_LoginV1_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -49,9 +50,9 @@ func (c *authServiceClient) LoginV1(ctx context.Context, in *LoginV1Request, opt
 	return out, nil
 }
 
-func (c *authServiceClient) RegisterV1(ctx context.Context, in *RegisterV1Request, opts ...grpc.CallOption) (*RegisterV1Response, error) {
+func (c *authServiceClient) RegisterV1(ctx context.Context, in *RegisterRequestV1, opts ...grpc.CallOption) (*RegisterResponseV1, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RegisterV1Response)
+	out := new(RegisterResponseV1)
 	err := c.cc.Invoke(ctx, AuthService_RegisterV1_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -63,8 +64,8 @@ func (c *authServiceClient) RegisterV1(ctx context.Context, in *RegisterV1Reques
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility.
 type AuthServiceServer interface {
-	LoginV1(context.Context, *LoginV1Request) (*LoginV1Response, error)
-	RegisterV1(context.Context, *RegisterV1Request) (*RegisterV1Response, error)
+	LoginV1(context.Context, *LoginRequestV1) (*LoginResponseV1, error)
+	RegisterV1(context.Context, *RegisterRequestV1) (*RegisterResponseV1, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -75,10 +76,10 @@ type AuthServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAuthServiceServer struct{}
 
-func (UnimplementedAuthServiceServer) LoginV1(context.Context, *LoginV1Request) (*LoginV1Response, error) {
+func (UnimplementedAuthServiceServer) LoginV1(context.Context, *LoginRequestV1) (*LoginResponseV1, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoginV1 not implemented")
 }
-func (UnimplementedAuthServiceServer) RegisterV1(context.Context, *RegisterV1Request) (*RegisterV1Response, error) {
+func (UnimplementedAuthServiceServer) RegisterV1(context.Context, *RegisterRequestV1) (*RegisterResponseV1, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterV1 not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
@@ -103,7 +104,7 @@ func RegisterAuthServiceServer(s grpc.ServiceRegistrar, srv AuthServiceServer) {
 }
 
 func _AuthService_LoginV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoginV1Request)
+	in := new(LoginRequestV1)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -115,13 +116,13 @@ func _AuthService_LoginV1_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: AuthService_LoginV1_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).LoginV1(ctx, req.(*LoginV1Request))
+		return srv.(AuthServiceServer).LoginV1(ctx, req.(*LoginRequestV1))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _AuthService_RegisterV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegisterV1Request)
+	in := new(RegisterRequestV1)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -133,7 +134,7 @@ func _AuthService_RegisterV1_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: AuthService_RegisterV1_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).RegisterV1(ctx, req.(*RegisterV1Request))
+		return srv.(AuthServiceServer).RegisterV1(ctx, req.(*RegisterRequestV1))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -155,5 +156,5 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "proto/keeper/v1/keeper.proto",
+	Metadata: "proto/keeper/v1/auth.proto",
 }

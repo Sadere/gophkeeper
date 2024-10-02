@@ -1,9 +1,8 @@
-package tui
+package screens
 
 import (
 	"context"
 	"strings"
-	"time"
 
 	"github.com/Sadere/gophkeeper/internal/client/tui/components"
 	"github.com/Sadere/gophkeeper/internal/client/tui/style"
@@ -14,6 +13,12 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+const (
+	loginLogin = iota
+	loginPassword
+)
+
+// Model for login form
 type LoginModel struct {
 	state      *State
 	inputGroup components.InputGroup
@@ -30,16 +35,13 @@ func NewLoginModel(state *State) *LoginModel {
 	var t textinput.Model
 	for i := range inputs {
 		t = textinput.New()
-		t.Cursor.Style = style.FocusedStyle
 		t.CharLimit = 32
 
 		switch i {
-		case 0:
+		case loginLogin:
 			t.Placeholder = "Login"
 			t.Focus()
-			t.PromptStyle = style.FocusedStyle
-			t.TextStyle = style.FocusedStyle
-		case 1:
+		case loginPassword:
 			t.Placeholder = "Password"
 			t.EchoMode = textinput.EchoPassword
 			t.EchoCharacter = '•'
@@ -54,7 +56,7 @@ func NewLoginModel(state *State) *LoginModel {
 }
 
 func (m LoginModel) Init() tea.Cmd {
-	return nil
+	return m.inputGroup.Init()
 }
 
 func (m LoginModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -77,8 +79,8 @@ func (m LoginModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m LoginModel) Submit() (tea.Model, tea.Cmd) {
-	login := m.inputGroup.Inputs[0].Value()
-	password := m.inputGroup.Inputs[1].Value()
+	login := m.inputGroup.Inputs[loginLogin].Value()
+	password := m.inputGroup.Inputs[loginPassword].Value()
 
 	// Validate inputs
 	if len(login) == 0 {
@@ -92,10 +94,7 @@ func (m LoginModel) Submit() (tea.Model, tea.Cmd) {
 	}
 
 	// Login
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
-	defer cancel()
-
-	accessToken, err := m.state.client.Login(ctx, login, password)
+	accessToken, err := m.state.client.Login(context.Background(), login, password)
 	if err != nil {
 		m.errorMsg = err.Error()
 		return m, nil
@@ -104,7 +103,8 @@ func (m LoginModel) Submit() (tea.Model, tea.Cmd) {
 	// Proceed to main screen
 	m.state.accessToken = accessToken
 
-	return m, tea.Quit
+	mainScreen := NewSecretListModel(m.state)
+	return NewRootModel(m.state).SwitchScreen(mainScreen)
 }
 
 func (m LoginModel) View() string {

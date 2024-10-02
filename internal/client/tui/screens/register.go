@@ -1,9 +1,8 @@
-package tui
+package screens
 
 import (
 	"context"
 	"strings"
-	"time"
 
 	"github.com/Sadere/gophkeeper/internal/client/tui/components"
 	"github.com/Sadere/gophkeeper/internal/client/tui/style"
@@ -20,6 +19,13 @@ var (
 	errPasswordConfirmEmpty = "Please enter password second time"
 )
 
+const (
+	registerLogin = iota
+	registerPassword
+	registerConfirmPassword
+)
+
+// Model for register form
 type RegisterModel struct {
 	state      *State
 	inputGroup components.InputGroup
@@ -36,20 +42,17 @@ func NewRegisterModel(state *State) *RegisterModel {
 	var t textinput.Model
 	for i := range inputs {
 		t = textinput.New()
-		t.Cursor.Style = style.FocusedStyle
 		t.CharLimit = 32
 
 		switch i {
-		case 0:
+		case registerLogin:
 			t.Placeholder = "Login"
 			t.Focus()
-			t.PromptStyle = style.FocusedStyle
-			t.TextStyle = style.FocusedStyle
-		case 1:
+		case registerPassword:
 			t.Placeholder = "Password"
 			t.EchoMode = textinput.EchoPassword
 			t.EchoCharacter = '•'
-		case 2:
+		case registerConfirmPassword:
 			t.Placeholder = "Confirm password"
 			t.EchoMode = textinput.EchoPassword
 			t.EchoCharacter = '•'
@@ -64,7 +67,7 @@ func NewRegisterModel(state *State) *RegisterModel {
 }
 
 func (m RegisterModel) Init() tea.Cmd {
-	return nil
+	return m.inputGroup.Init()
 }
 
 func (m RegisterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -87,9 +90,9 @@ func (m RegisterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m RegisterModel) Submit() (tea.Model, tea.Cmd) {
-	login := m.inputGroup.Inputs[0].Value()
-	password := m.inputGroup.Inputs[1].Value()
-	confirmPassword := m.inputGroup.Inputs[2].Value()
+	login := m.inputGroup.Inputs[registerLogin].Value()
+	password := m.inputGroup.Inputs[registerPassword].Value()
+	confirmPassword := m.inputGroup.Inputs[registerConfirmPassword].Value()
 
 	// Validate inputs
 	if len(login) == 0 {
@@ -113,10 +116,7 @@ func (m RegisterModel) Submit() (tea.Model, tea.Cmd) {
 	}
 
 	// Register
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
-	defer cancel()
-
-	accessToken, err := m.state.client.Register(ctx, login, password)
+	accessToken, err := m.state.client.Register(context.Background(), login, password)
 	if err != nil {
 		m.errorMsg = err.Error()
 		return m, nil
@@ -125,7 +125,8 @@ func (m RegisterModel) Submit() (tea.Model, tea.Cmd) {
 	// Proceed to main screen
 	m.state.accessToken = accessToken
 
-	return m, tea.Quit
+	mainScreen := NewSecretListModel(m.state)
+	return NewRootModel(m.state).SwitchScreen(mainScreen)
 }
 
 func (m RegisterModel) View() string {

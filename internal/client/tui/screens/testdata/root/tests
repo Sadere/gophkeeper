@@ -1,0 +1,77 @@
+run
+----
+-- view:
+GophKeeper version: N/A built at: N/A␤
+                                     ␤
+                                     ␤
+What would you like to do?           ␤
+                                     ␤
+         > Login                     ␤
+                                     ␤
+     Register new user               ␤
+                                     ␤
+                                     ␤
+↑/↓: navigate • ctrl+c: quit         🛇
+
+run
+resize 25 25
+----
+TEA WINDOW SIZE: {25 25}
+-- view:
+GophKeeper version: N/A built at: N/A␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+ What would you like to              ␤
+           do?                       ␤
+                                     ␤
+         > Login                     ␤
+                                     ␤
+     Register new user               ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+↑/↓: navigate • ctrl+c: quit         🛇
+
+# Exit
+run
+key ctrl+c
+----
+TEA QUIT
+-- view:
+GophKeeper version: N/A built at: N/A␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+ What would you like to              ␤
+           do?                       ␤
+                                     ␤
+         > Login                     ␤
+                                     ␤
+     Register new user               ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+                                     ␤
+↑/↓: navigate • ctrl+c: quit         🛇
